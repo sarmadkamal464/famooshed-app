@@ -279,7 +279,6 @@ class SignleItemPage extends GetView<SignleItemController> {
               height: getProportionateScreenHeight(8),
             ),
             Text(
-              // controller.getFoodDetailsResponse!.foods[0].desc,
               controller.getFoodDetailsResponse!.foods[0].desc
                   .replaceAll(RegExp(r'<[^>]*>'), ''),
               style: urbanistRegular.copyWith(
@@ -311,11 +310,6 @@ class SignleItemPage extends GetView<SignleItemController> {
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // Text(
-                //   controller.getFoodDetailsResponse!.foods[0].desc,
-                //   style: urbanistRegular.copyWith(
-                //       fontSize: 16, color: AppColors.appTheme),
-                // ),
                 SizedBox(height: Get.height * .01),
                 GestureDetector(
                   onTap: () {
