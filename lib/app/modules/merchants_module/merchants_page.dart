@@ -798,7 +798,7 @@ class MerchantsPage extends GetView<MerchantsController> {
                   children: [
                     Expanded(
                       child: Text(
-                        "£${double.parse(controller.foodList[index].price).toInt().toString()}",
+                        "£${double.parse(controller.foodList[index].price).toString()}",
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                         style: beVietnamProSemiBold.copyWith(
