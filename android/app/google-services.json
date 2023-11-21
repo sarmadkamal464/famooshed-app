@@ -1,0 +1,135 @@
+{
+  "project_info": {
+    "project_number": "106990273431",
+    "firebase_url": "https://famooshed-314209-default-rtdb.firebaseio.com",
+    "project_id": "famooshed-314209",
+    "storage_bucket": "famooshed-314209.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:106990273431:android:eb88bcd07dbb4112693ad2",
+        "android_client_info": {
+          "package_name": "com.famooshed"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "106990273431-8su2ut5jqvjcvenq05nubg283fof3e74.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.famooshed",
+            "certificate_hash": "412ff29b4c949ea160b18620dbe6a1524edec804"
+          }
+        },
+        {
+          "client_id": "106990273431-s2e0u8jq9th972hgo0575ck8e56ngkc8.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDdxC5HlMpmdZtDz2ebHLV7TY8LpRAvrH0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "106990273431-s2e0u8jq9th972hgo0575ck8e56ngkc8.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "106990273431-7bbj4tljtkjg53v6gdqkk94fobbvu7o7.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.ownerApp"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:106990273431:android:6c79f68f309918d9693ad2",
+        "android_client_info": {
+          "package_name": "com.famooshed.deliverydriver"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "106990273431-s2e0u8jq9th972hgo0575ck8e56ngkc8.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDdxC5HlMpmdZtDz2ebHLV7TY8LpRAvrH0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "106990273431-s2e0u8jq9th972hgo0575ck8e56ngkc8.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "106990273431-7bbj4tljtkjg53v6gdqkk94fobbvu7o7.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.ownerApp"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:106990273431:android:ca2c1b8d0df4d403693ad2",
+        "android_client_info": {
+          "package_name": "com.famooshedmerchant"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "106990273431-h61ufmte1mb5ucgaul6rg5iekfg60nqc.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.famooshedmerchant",
+            "certificate_hash": "eead951418725b6ad97c69f27cb6b5f6e2d38a77"
+          }
+        },
+        {
+          "client_id": "106990273431-s2e0u8jq9th972hgo0575ck8e56ngkc8.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDdxC5HlMpmdZtDz2ebHLV7TY8LpRAvrH0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "106990273431-s2e0u8jq9th972hgo0575ck8e56ngkc8.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "106990273431-7bbj4tljtkjg53v6gdqkk94fobbvu7o7.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.ownerApp"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

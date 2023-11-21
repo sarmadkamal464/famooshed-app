@@ -1,0 +1,96 @@
+name: famooshed
+version: 1.0.0+1
+publish_to: none
+description: A new Flutter project.
+environment:
+  sdk: '>=3.0.5 <4.0.0'
+
+dependencies:
+  awesome_card: ^1.1.7
+  badges: ^3.1.1
+  cached_network_image: ^3.2.3
+  checkbox_grouped: ^1.8.2
+  cupertino_icons: ^1.0.0
+  dio: ^5.2.1+1
+  expansion_tile_card: ^3.0.0
+  file_picker: ^5.3.1
+  firebase_auth: ^4.6.3
+  firebase_core: ^2.14.0
+  flutter:
+    sdk: flutter
+  flutter_google_map_polyline_point: ^0.0.1
+  flutter_google_places_hoc081098: ^1.2.0
+#  geocoding: 2.1.0
+  location_geocoder: 1.0.5
+  # flutter_polyline_points: ^1.0.0
+  flutter_rating_bar: ^4.0.1
+  flutter_screenutil: 5.7.0
+  flutter_svg: ^1.1.6
+  geolocator: ^9.0.2
+  get: 4.6.5
+  get_storage: 2.1.1
+  google_api_headers: ^1.6.0
+  google_fonts: 4.0.3
+  google_maps_flutter: ^2.3.1
+  google_maps_webservice: ^0.0.20-nullsafety.5
+  google_sign_in: ^6.1.4
+  group_radio_button: ^1.3.0
+  hexcolor: ^3.0.1
+  iconify_flutter: ^0.0.5
+  image_cropper: 3.0.2
+  image_picker: 0.8.7+3
+  intl: 0.18.1
+  jiffy: ^6.2.1
+  line_icons: ^2.0.1
+  logger: ^1.3.0
+  multi_select_flutter: ^4.1.3
+  octo_image: 1.0.2
+  pinput: ^2.2.31
+  super_banners: ^0.0.1
+  syncfusion_flutter_datepicker: ^22.1.36
+  url_launcher: ^6.1.11
+  chips_choice: 3.0.0
+  flutter_html:
+  timeline_tile: 2.0.0
+  flutter_stripe: 9.4.0
+
+  sign_in_with_apple: 5.0.0
+  crypto: 3.0.3
+  flutter_facebook_auth: 6.0.1
+
+  firebase_messaging: 14.6.5
+
+  equatable: 2.0.5
+#  cloud_firestore: 4.8.4
+#  flutter_local_notifications: 15.1.0+1
+  popover: 0.2.8+2
+  mixpanel_flutter: 2.1.1
+
+
+
+dev_dependencies:
+  change_app_package_name: ^1.1.0
+  flutter_lints: ^2.0.1
+  # flutter_launcher_icons: ^0.13.1
+  flutter_native_splash: ^2.1.6
+  flutter_test:
+    sdk: flutter
+
+dependency_overrides:
+  http: ^1.1.0
+# flutter_launcher_icons:
+#   android: launcher_icon
+#   image_path: assets/logo/user_app_logo.png
+#   ios: true
+#   remove_alpha_ios: true
+flutter:
+  assets:
+    - assets/images/
+    - assets/logo/
+    - assets/icons/
+    - assets/dummy/
+    - assets/svg/
+    - assets/
+    - assets/config/
+
+  uses-material-design: true
