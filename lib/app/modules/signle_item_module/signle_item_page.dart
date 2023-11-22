@@ -120,7 +120,7 @@ class SignleItemPage extends GetView<SignleItemController> {
                                   Constants.imgUrl +
                                       signleItemController
                                           .getFoodDetailsResponse!.image,
-                                  fit: BoxFit.cover,
+                                  fit: BoxFit.fitHeight,
                                 )),
                           ),
                           // SliverPersistentHeader(
