@@ -134,11 +134,14 @@ class MerchantsPage extends GetView<MerchantsController> {
                       backgroundColor: AppColors.white,
                       pinned: true,
                       floating: true,
-                      expandedHeight: MediaQuery.of(context).size.height * 0.6,
+                      expandedHeight: MediaQuery.of(context).size.height * 0.55,
                       flexibleSpace: FlexibleSpaceBar(
                         background: merchantInfo(),
                       ),
                       // Add actions or other SliverAppBar properties if needed
+                    ),
+                    SliverToBoxAdapter(
+                      child: SizedBox(height: 3), // Adjust the height as needed
                     ),
                     SliverFillRemaining(
                       child: DefaultTabController(
@@ -746,7 +749,7 @@ class MerchantsPage extends GetView<MerchantsController> {
                   image: DecorationImage(
                     image: NetworkImage(
                         Constants.imgUrl + controller.foodList[index].image),
-                    fit: BoxFit.fill,
+                    fit: BoxFit.fitHeight,
                   ),
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(8)),
