@@ -26,6 +26,7 @@ import 'package:iconify_flutter/icons/uil.dart';
 import '../../theme/size_config.dart';
 import '../merchants_module/merchants_controller.dart';
 import '../widgets/custom_rect_button.dart';
+import 'package:flutter_html/flutter_html.dart';
 
 class SignleItemPage extends GetView<SignleItemController> {
   const SignleItemPage({super.key});
@@ -120,7 +121,7 @@ class SignleItemPage extends GetView<SignleItemController> {
                                   Constants.imgUrl +
                                       signleItemController
                                           .getFoodDetailsResponse!.image,
-                                  fit: BoxFit.cover,
+                                  fit: BoxFit.fitHeight,
                                 )),
                           ),
                           // SliverPersistentHeader(
@@ -278,14 +279,15 @@ class SignleItemPage extends GetView<SignleItemController> {
             SizedBox(
               height: getProportionateScreenHeight(8),
             ),
-            Text(
-              controller.getFoodDetailsResponse!.foods[0].desc
-                  .replaceAll(RegExp(r'<[^>]*>'), ''),
-              style: urbanistRegular.copyWith(
-                color: Colors.black,
-                fontSize: getProportionalFontSize(13),
-                fontWeight: FontWeight.w400,
-              ),
+            Html(
+              data: controller.getFoodDetailsResponse!.foods[0].desc,
+              style: {
+                'body': Style(
+                  color: Colors.black,
+                  fontSize: FontSize(getProportionalFontSize(13)),
+                  fontWeight: FontWeight.w400,
+                ),
+              },
             ),
             SizedBox(
               height: getProportionateScreenHeight(8),
