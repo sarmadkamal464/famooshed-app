@@ -227,7 +227,7 @@ class SignleItemController extends GetxController
     try {
       var body = {
         "id": getFoodDetailsResponse!.id,
-        // "qty": counter.value,
+        "qty": counter.value,
         "isApp": true,
         "uid": uid.toString(),
       };

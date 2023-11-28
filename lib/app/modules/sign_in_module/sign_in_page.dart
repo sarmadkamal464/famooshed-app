@@ -267,27 +267,33 @@ class SignInPage extends GetView<SignInController> {
                     ),
                   ),
                 ),
-                Align(
-                  alignment: Alignment.bottomCenter,
-                  child: GestureDetector(
-                    onTap: () {
-                      controller.redirctToSignUp();
-                    },
-                    child: RichText(
-                        textAlign: TextAlign.center,
-                        text: TextSpan(children: [
-                          TextSpan(
-                              style: urbanistMedium.copyWith(
-                                  color: "#697A70".fromHex, fontSize: 16),
-                              text: Strings.donotHaveAcc,
-                              children: [
-                                TextSpan(
-                                  text: " ${Strings.createAcc}",
-                                  style: urbanistBold.copyWith(
-                                      color: AppColors.appTheme, fontSize: 14),
-                                )
-                              ])
-                        ])),
+                Container(
+                  padding: EdgeInsets.only(
+                      bottom:
+                          50.0), // Adjust the value for the desired bottom space
+                  child: Align(
+                    alignment: Alignment.bottomCenter,
+                    child: GestureDetector(
+                      onTap: () {
+                        controller.redirctToSignUp();
+                      },
+                      child: RichText(
+                          textAlign: TextAlign.center,
+                          text: TextSpan(children: [
+                            TextSpan(
+                                style: urbanistMedium.copyWith(
+                                    color: "#697A70".fromHex, fontSize: 16),
+                                text: Strings.donotHaveAcc,
+                                children: [
+                                  TextSpan(
+                                    text: " ${Strings.createAcc}",
+                                    style: urbanistBold.copyWith(
+                                        color: AppColors.appTheme,
+                                        fontSize: 14),
+                                  )
+                                ])
+                          ])),
+                    ),
                   ),
                 )
               ],
