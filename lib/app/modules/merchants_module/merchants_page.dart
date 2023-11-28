@@ -128,61 +128,58 @@ class MerchantsPage extends GetView<MerchantsController> {
           ),
           body: _.isLoading.value
               ? const CircularProgressIndicator(color: Colors.transparent)
-              : CustomScrollView(
-                  slivers: [
-                    SliverAppBar(
-                      backgroundColor: AppColors.white,
-                      pinned: true,
-                      floating: true,
-                      expandedHeight: MediaQuery.of(context).size.height * 0.55,
-                      flexibleSpace: FlexibleSpaceBar(
-                        background: merchantInfo(),
-                      ),
-                      // Add actions or other SliverAppBar properties if needed
-                    ),
-                    SliverToBoxAdapter(
-                      child: SizedBox(height: 3), // Adjust the height as needed
-                    ),
-                    SliverFillRemaining(
-                      child: DefaultTabController(
-                        length: 3,
-                        child: Column(
-                          children: [
-                            // SizedBox(height: getProportionateScreenHeight(5)),
-                            // _tabSection(context),
-                            SizedBox(
-                              height: getProportionateScreenHeight(60),
-                              child: TabBar(
-                                automaticIndicatorColorAdjustment: true,
-                                indicatorColor: AppColors.appTheme,
-                                labelColor: AppColors.appTheme,
-                                unselectedLabelColor: AppColors.appTheme,
-                                labelStyle: beVietnamProaBold.copyWith(
-                                  color: Color(0xFF204F33),
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.w600,
-                                ),
-                                tabs: [
-                                  Tab(text: Strings.products),
-                                  Tab(text: Strings.offers),
-                                  Tab(text: Strings.reviews),
-                                ],
-                              ),
-                            ),
-                            Expanded(
-                              //Add this to give height
-                              // height: MediaQuery.of(context).size.height,
-                              child: TabBarView(children: [
-                                product(),
-                                offerPage(),
-                                reviewPage(),
-                              ]),
-                            ),
-                          ],
+              : LayoutBuilder(
+                  builder: (context, constraints) {
+                    return CustomScrollView(
+                      slivers: [
+                        SliverAppBar(
+                          backgroundColor: AppColors.white,
+                          pinned: true,
+                          floating: true,
+                          expandedHeight: constraints.maxHeight * 0.5,
+                          flexibleSpace: FlexibleSpaceBar(
+                            background: merchantInfo(),
+                          ),
+                          // Add actions or other SliverAppBar properties if needed
                         ),
-                      ),
-                    ),
-                  ],
+                        SliverFillRemaining(
+                          child: DefaultTabController(
+                            length: 3,
+                            child: Column(
+                              children: [
+                                SizedBox(
+                                  height: getProportionateScreenHeight(60),
+                                  child: TabBar(
+                                    automaticIndicatorColorAdjustment: true,
+                                    indicatorColor: AppColors.appTheme,
+                                    labelColor: AppColors.appTheme,
+                                    unselectedLabelColor: AppColors.appTheme,
+                                    labelStyle: beVietnamProaBold.copyWith(
+                                      color: Color(0xFF204F33),
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                    tabs: [
+                                      Tab(text: Strings.products),
+                                      Tab(text: Strings.offers),
+                                      Tab(text: Strings.reviews),
+                                    ],
+                                  ),
+                                ),
+                                Expanded(
+                                  child: TabBarView(children: [
+                                    product(),
+                                    offerPage(),
+                                    reviewPage(),
+                                  ]),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ],
+                    );
+                  },
                 ),
         );
       },
@@ -190,54 +187,56 @@ class MerchantsPage extends GetView<MerchantsController> {
   }
 
   merchantInfo() {
-    return Column(
-      children: [
-        merchentName(),
-        SizedBox(
-          height: getProportionateScreenHeight(8),
-        ),
-        productAndLocation(),
-        SizedBox(
-          height: getProportionateScreenHeight(8),
-        ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const Iconify(
-              size: 18,
-              Uil.map_marker,
-              color: AppColors.doveGray,
-            ),
-            const SizedBox(
-              width: 5,
-            ),
-            Flexible(
-              child: Text(
-                "${controller.restaurant!.businessAddress}",
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-                style: urbanistSemiBold.copyWith(
-                    overflow: TextOverflow.ellipsis,
-                    color: AppColors.doveGray,
-                    fontSize: 14),
+    return SingleChildScrollView(
+      child: Column(
+        children: [
+          merchentName(),
+          SizedBox(
+            height: getProportionateScreenHeight(8),
+          ),
+          productAndLocation(),
+          SizedBox(
+            height: getProportionateScreenHeight(8),
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const Iconify(
+                size: 18,
+                Uil.map_marker,
+                color: AppColors.doveGray,
               ),
-            )
-          ],
-        ),
-        // SizedBox(height: getProportionateScreenHeight(7)),
-        // propertiesSection(),
-        // SizedBox(height: getProportionateScreenHeight(9)),
-        // DefaultButton(
-        //     height: getProportionateScreenHeight(44),
-        //     buttonColor: AppColors.appTheme,
-        //     textStyle:
-        //         urbanistBold.copyWith(fontSize: 18, color: AppColors.white),
-        //     text: "Contact",
-        //     width: Get.width * .4,
-        //     onTap: () {}),
+              const SizedBox(
+                width: 5,
+              ),
+              Flexible(
+                child: Text(
+                  "${controller.restaurant!.businessAddress}",
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: urbanistSemiBold.copyWith(
+                      overflow: TextOverflow.ellipsis,
+                      color: AppColors.doveGray,
+                      fontSize: 14),
+                ),
+              )
+            ],
+          ),
+          // SizedBox(height: getProportionateScreenHeight(7)),
+          // propertiesSection(),
+          // SizedBox(height: getProportionateScreenHeight(9)),
+          // DefaultButton(
+          //     height: getProportionateScreenHeight(44),
+          //     buttonColor: AppColors.appTheme,
+          //     textStyle:
+          //         urbanistBold.copyWith(fontSize: 18, color: AppColors.white),
+          //     text: "Contact",
+          //     width: Get.width * .4,
+          //     onTap: () {}),
 
-        merchantsDecription()
-      ],
+          merchantsDecription()
+        ],
+      ),
     );
   }
 
