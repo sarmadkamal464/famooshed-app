@@ -6,6 +6,7 @@ import 'package:famooshed/app/common/util/exports.dart';
 import 'package:famooshed/app/common/values/app_icons.dart';
 import 'package:famooshed/app/data/models/get_food_details_response.dart';
 import 'package:famooshed/app/modules/signle_item_module/signle_item_controller.dart';
+import 'package:famooshed/app/modules/signle_item_module/single_product_variant_detail_page.dart';
 import 'package:famooshed/app/modules/widgets/custom_back_button.dart';
 import 'package:famooshed/app/modules/widgets/custom_default_button.dart';
 import 'package:famooshed/app/modules/widgets/no_item_found.dart';
@@ -257,6 +258,58 @@ class SignleItemPage extends GetView<SignleItemController> {
     );
   }
 
+  Widget variantDropdown(SignleItemController singleItemController) {
+    final variants =
+        (singleItemController.getFoodDetailsResponse?.variants ?? [])
+            .map((variant) =>
+                Variant(variant['id'].toString(), variant['name'].toString()))
+            .toList();
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Obx(() {
+          bool variantSelected = singleItemController.isVariantSelected.value;
+          Variant selectedVariant = singleItemController.selectedVariant.value;
+          String hint = variants.isNotEmpty
+              ? 'See Product Variants'
+              : 'No Product Variants';
+          return DropdownButton<Variant>(
+            value: variantSelected ? selectedVariant : null,
+            hint: Text(
+              hint,
+              style: TextStyle(color: Color.fromARGB(255, 31, 61, 32)),
+            ),
+            isExpanded: true,
+            isDense: true,
+            iconSize: 40,
+            elevation: 8,
+            style: const TextStyle(
+              fontFamily: 'SF Pro Display',
+              color: Color.fromARGB(255, 31, 61, 32),
+              fontWeight: FontWeight.bold,
+            ),
+            onChanged: (newValue) {
+              singleItemController.updateSelectedVariant(newValue!);
+              // Additional logic if needed based on the selected variant
+              // Call getFoodDetailById with the selected variant ID
+              // singleItemController.getFoodDetailById(id: newValue.id);
+              // singleItemController.getFoodVariantsById(id: newValue.id);
+              Get.to(() => VariantDetailPage());
+            },
+            items: variants.map((variant) {
+              return DropdownMenuItem<Variant>(
+                value: variant,
+                child: Text(variant.name),
+              );
+            }).toList(),
+          );
+        }),
+        // ... Other UI elements ...
+      ],
+    );
+  }
+
   Widget generalDescription(SignleItemController signleItemController) {
     return SingleChildScrollView(
       padding: EdgeInsets.symmetric(
@@ -309,6 +362,8 @@ class SignleItemPage extends GetView<SignleItemController> {
                 fontWeight: FontWeight.w600,
               ),
             ),
+
+            variantDropdown(controller),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [

@@ -5,6 +5,7 @@ import 'package:famooshed/app/common/values/app_urls.dart';
 import 'package:famooshed/app/data/api_helper.dart';
 import 'package:famooshed/app/data/models/add_food_reviews_response.dart';
 import 'package:famooshed/app/data/models/get_food_details_response.dart';
+import 'package:famooshed/app/data/models/variant_model.dart';
 import 'package:famooshed/app/utils/dprint.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -44,6 +45,7 @@ class SignleItemController extends GetxController
   RxDouble servicePrice = 0.0.obs;
   dynamic arguments = Get.arguments;
   GetFoodDetailsResponse? getFoodDetailsResponse;
+  GetVariantResponse? getVariantsDetailsResponse;
   AddFoodReviewsResponse? addFoodReviewsResponse;
   final descController = TextEditingController();
 
@@ -87,6 +89,8 @@ class SignleItemController extends GetxController
           } else {
             similarPrductList = response.similarFood;
           }
+          // selectedVariant.value = response.variants[0].id.toString();
+          // print('The value of the selected variant is: $selectedVariant.value');
         } catch (e, stack) {
           log(e.toString(), stackTrace: stack);
         }
@@ -166,6 +170,39 @@ class SignleItemController extends GetxController
         } else {
           similarPrductList = response.similarFood;
         }
+        isLoading.value = false;
+        update();
+      },
+      retryFunction: getFoodDetailById,
+    );
+  }
+
+  // getFoodVariantsById({id}) {
+  //   _apiHelper.postApiCall(AppUrl.getFoodVariantDetails).futureValue(
+  //     (value) {
+  //       var response = GetVariantResponse.fromJson(value);
+  //       getVariantsDetailsResponse = response;
+  //       print("getVariantDetails is $getVariantsDetailsResponse");
+  //       isLoading.value = false;
+  //       update();
+  //     },
+  //     retryFunction: getFoodDetailById,
+  //   );
+  // }
+  Future<void> getFoodVariantsById({required String id}) async {
+    // Construct the body for the POST request
+    Map<String, dynamic> requestBody = {
+      'id': id, // Assuming 'id' is the key for the ID parameter
+      // Other parameters if needed
+    };
+
+    _apiHelper
+        .postApiCall(AppUrl.getFoodVariantDetails, requestBody)
+        .futureValue(
+      (value) {
+        var response = GetVariantResponse.fromJson(value);
+        getVariantsDetailsResponse = response;
+        print("getVariantDetails is $getVariantsDetailsResponse");
         isLoading.value = false;
         update();
       },
@@ -345,4 +382,22 @@ class SignleItemController extends GetxController
   }
 
   void deleteAccount() {}
+
+  var isVariantSelected = false.obs;
+  var selectedVariant = Variant('', '').obs; // Initialize with an empty Variant
+
+  void updateSelectedVariant(Variant variant) {
+    selectedVariant.value = variant;
+    isVariantSelected.value = true;
+    print('Variant is ${variant.name}, ID is ${variant.id}');
+    // Additional logic if needed based on the selected variant
+    getFoodVariantsById(id: variant.id);
+  }
+}
+
+class Variant {
+  final String id;
+  final String name;
+
+  Variant(this.id, this.name);
 }
