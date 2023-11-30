@@ -210,7 +210,7 @@ class SignUpPage extends GetView<SignUpController> {
                                       ])
                                 ])
                           ])),
-                      SizedBox(height: Get.height * .1),
+                      SizedBox(height: 40),
                       GestureDetector(
                         onTap: () {
                           Get.back();

@@ -20,6 +20,7 @@ abstract class AppUrl {
   static const getResDeliver = "getResDeliver";
   static const delAddress = "delAddress";
   static const getFoodDetails = "getFood?id=";
+  static const getFoodVariantDetails = "GetVariants?id=";
   static const addFoodReviews = "foodReviewsAdd";
   static const getProfile = "getUserProfile";
   static const uploadAvatar = "uploadAvatar";
