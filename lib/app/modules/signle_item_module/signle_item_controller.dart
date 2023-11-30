@@ -5,6 +5,8 @@ import 'package:famooshed/app/common/values/app_urls.dart';
 import 'package:famooshed/app/data/api_helper.dart';
 import 'package:famooshed/app/data/models/add_food_reviews_response.dart';
 import 'package:famooshed/app/data/models/get_food_details_response.dart';
+import 'package:famooshed/app/data/models/variant_model.dart';
+import 'package:famooshed/app/modules/signle_item_module/single_product_variant_detail_page.dart';
 import 'package:famooshed/app/utils/dprint.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -44,6 +46,7 @@ class SignleItemController extends GetxController
   RxDouble servicePrice = 0.0.obs;
   dynamic arguments = Get.arguments;
   GetFoodDetailsResponse? getFoodDetailsResponse;
+  GetVariantResponse? getVariantsDetailsResponse;
   AddFoodReviewsResponse? addFoodReviewsResponse;
   final descController = TextEditingController();
 
@@ -87,6 +90,8 @@ class SignleItemController extends GetxController
           } else {
             similarPrductList = response.similarFood;
           }
+          // selectedVariant.value = response.variants[0].id.toString();
+          // print('The value of the selected variant is: $selectedVariant.value');
         } catch (e, stack) {
           log(e.toString(), stackTrace: stack);
         }
@@ -173,6 +178,40 @@ class SignleItemController extends GetxController
     );
   }
 
+  // getFoodVariantsById({id}) {
+  //   _apiHelper.postApiCall(AppUrl.getFoodVariantDetails).futureValue(
+  //     (value) {
+  //       var response = GetVariantResponse.fromJson(value);
+  //       getVariantsDetailsResponse = response;
+  //       print("getVariantDetails is $getVariantsDetailsResponse");
+  //       isLoading.value = false;
+  //       update();
+  //     },
+  //     retryFunction: getFoodDetailById,
+  //   );
+  // }
+  Future<void> getFoodVariantsById({required String id}) async {
+    // Construct the body for the POST request
+    Map<String, dynamic> requestBody = {
+      'id': id, // Assuming 'id' is the key for the ID parameter
+      // Other parameters if needed
+    };
+
+    _apiHelper
+        .postApiCall(AppUrl.getFoodVariantDetails, requestBody)
+        .futureValue(
+      (value) {
+        var response = GetVariantResponse.fromJson(value);
+        getVariantsDetailsResponse = response;
+        print("getVariantDetails is $getVariantsDetailsResponse");
+        isLoading.value = false;
+        update();
+        Get.to(() => const VariantDetailPage());
+      },
+      retryFunction: getFoodDetailById,
+    );
+  }
+
   final RxList<Product> _productList = RxList();
   List<Product> get productList => _productList;
   set productList(List<Product> productList) =>
@@ -227,7 +266,7 @@ class SignleItemController extends GetxController
     try {
       var body = {
         "id": getFoodDetailsResponse!.id,
-        // "qty": counter.value,
+        "qty": counter.value,
         "isApp": true,
         "uid": uid.toString(),
       };
@@ -235,6 +274,106 @@ class SignleItemController extends GetxController
       d.Response response =
           await _apiHelper.postApiNew(AppUrl.addToCart, {}, body);
 
+      if (response.statusCode == 200) {
+        if (response.data['status'] != null &&
+            response.data['status'] == true) {
+          if (response.data['data']['is_same_restaurant'] == 1) {
+            LoadingDialog.closeLoadingDialog();
+            // await getCartNew();
+            Utils.showSnackbar("Added to cart successfully");
+          }
+        } else {
+          if (response.data['showStockMessage'] != null &&
+              response.data['showStockMessage'] == true) {
+            LoadingDialog.closeLoadingDialog();
+            Utils.showSnackbar(
+                response.data['message'] ?? "Something went wrong!!!");
+          } else if (response.data['data']['is_same_restaurant'] == 0) {
+            showDialog(
+                context: Get.context!,
+                barrierDismissible: false,
+                builder: (context) => AlertDialog(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      title: new Text('Delete Cart'),
+                      content: new Text(
+                          'You can add to cart, only products from single market. Do you want to reset cart? And add new product.'),
+                      actions: <Widget>[
+                        TextButton(
+                          onPressed: () {
+                            LoadingDialog.closeLoadingDialog();
+                            Get.back();
+                          }, //<-- SEE HERE
+                          child: new Text(
+                            'CANCEL',
+                            style: urbanistSemiBold.copyWith(
+                              color: AppColors.greyText,
+                              fontSize: getProportionalFontSize(12),
+                            ),
+                          ),
+                        ),
+                        TextButton(
+                          onPressed: () async {
+                            await resetCart();
+                            d.Response response2 = await _apiHelper.postApiNew(
+                                AppUrl.addToCart, {}, body);
+
+                            if (response2.statusCode == 200) {
+                              if (response2.data['status'] != null &&
+                                  response2.data['status'] == true) {
+                                if (response2.data['data']
+                                        ['is_same_restaurant'] ==
+                                    1) {
+                                  LoadingDialog.closeLoadingDialog();
+                                  // await getCartNew();
+                                  Utils.showSnackbar(
+                                      "Added to cart successfully");
+                                }
+                              }
+                            }
+                          },
+                          child: new Text(
+                            'OK',
+                            style: urbanistSemiBold.copyWith(
+                              color: AppColors.redColor,
+                              fontSize: getProportionalFontSize(12),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ));
+          } else {
+            LoadingDialog.closeLoadingDialog();
+            // await getCartNew();
+            Utils.showSnackbar(
+                response.data['message'] ?? "Something went wrong!!!");
+          }
+        }
+      }
+    } catch (e) {
+      print(e.toString());
+      LoadingDialog.closeLoadingDialog();
+    }
+  }
+
+  addToCartVariantNew() async {
+    LoadingDialog.showLoadingDialog();
+    int uid = await Storage.getValue(Constants.userId);
+
+    print(uid);
+    try {
+      var body = {
+        "id": getFoodDetailsResponse!.id,
+        "Variantid": getVariantsDetailsResponse!.variant?.id,
+        "qty": counter.value,
+        "isApp": true,
+        "uid": uid.toString(),
+      };
+      print('cart body is $body');
+      d.Response response =
+          await _apiHelper.postApiNew(AppUrl.addToCart, {}, body);
+      print('response $response');
       if (response.statusCode == 200) {
         if (response.data['status'] != null &&
             response.data['status'] == true) {
@@ -345,4 +484,28 @@ class SignleItemController extends GetxController
   }
 
   void deleteAccount() {}
+
+  var isVariantSelected = false.obs;
+  var selectedVariant = Variant('', '').obs; // Initialize with an empty Variant
+
+  void updateSelectedVariant(Variant variant) {
+    selectedVariant.value = variant;
+    isVariantSelected.value = true;
+    print('Variant is ${variant.name}, ID is ${variant.id}');
+    // Additional logic if needed based on the selected variant
+    getFoodVariantsById(id: variant.id);
+  }
+
+  void resetState() {
+    isVariantSelected.value = false;
+    selectedVariant.value = Variant('', '');
+    // Reset other relevant state variables if needed
+  }
+}
+
+class Variant {
+  final String id;
+  final String name;
+
+  Variant(this.id, this.name);
 }
