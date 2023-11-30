@@ -6,6 +6,7 @@ import 'package:famooshed/app/data/api_helper.dart';
 import 'package:famooshed/app/data/models/add_food_reviews_response.dart';
 import 'package:famooshed/app/data/models/get_food_details_response.dart';
 import 'package:famooshed/app/data/models/variant_model.dart';
+import 'package:famooshed/app/modules/signle_item_module/single_product_variant_detail_page.dart';
 import 'package:famooshed/app/utils/dprint.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -205,6 +206,7 @@ class SignleItemController extends GetxController
         print("getVariantDetails is $getVariantsDetailsResponse");
         isLoading.value = false;
         update();
+        Get.to(() => const VariantDetailPage());
       },
       retryFunction: getFoodDetailById,
     );
@@ -355,6 +357,105 @@ class SignleItemController extends GetxController
     }
   }
 
+  addToCartVariantNew() async {
+    LoadingDialog.showLoadingDialog();
+    int uid = await Storage.getValue(Constants.userId);
+
+    print(uid);
+    try {
+      var body = {
+        "id": getVariantsDetailsResponse!.variant?.id,
+        "qty": counter.value,
+        "isApp": true,
+        "uid": uid.toString(),
+      };
+      print('cart body is $body');
+      d.Response response =
+          await _apiHelper.postApiNew(AppUrl.addToCart, {}, body);
+
+      if (response.statusCode == 200) {
+        if (response.data['status'] != null &&
+            response.data['status'] == true) {
+          if (response.data['data']['is_same_restaurant'] == 1) {
+            LoadingDialog.closeLoadingDialog();
+            // await getCartNew();
+            Utils.showSnackbar("Added to cart successfully");
+          }
+        } else {
+          if (response.data['showStockMessage'] != null &&
+              response.data['showStockMessage'] == true) {
+            LoadingDialog.closeLoadingDialog();
+            Utils.showSnackbar(
+                response.data['message'] ?? "Something went wrong!!!");
+          } else if (response.data['data']['is_same_restaurant'] == 0) {
+            showDialog(
+                context: Get.context!,
+                barrierDismissible: false,
+                builder: (context) => AlertDialog(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      title: new Text('Delete Cart'),
+                      content: new Text(
+                          'You can add to cart, only products from single market. Do you want to reset cart? And add new product.'),
+                      actions: <Widget>[
+                        TextButton(
+                          onPressed: () {
+                            LoadingDialog.closeLoadingDialog();
+                            Get.back();
+                          }, //<-- SEE HERE
+                          child: new Text(
+                            'CANCEL',
+                            style: urbanistSemiBold.copyWith(
+                              color: AppColors.greyText,
+                              fontSize: getProportionalFontSize(12),
+                            ),
+                          ),
+                        ),
+                        TextButton(
+                          onPressed: () async {
+                            await resetCart();
+                            d.Response response2 = await _apiHelper.postApiNew(
+                                AppUrl.addToCart, {}, body);
+
+                            if (response2.statusCode == 200) {
+                              if (response2.data['status'] != null &&
+                                  response2.data['status'] == true) {
+                                if (response2.data['data']
+                                        ['is_same_restaurant'] ==
+                                    1) {
+                                  LoadingDialog.closeLoadingDialog();
+                                  // await getCartNew();
+                                  Utils.showSnackbar(
+                                      "Added to cart successfully");
+                                }
+                              }
+                            }
+                          },
+                          child: new Text(
+                            'OK',
+                            style: urbanistSemiBold.copyWith(
+                              color: AppColors.redColor,
+                              fontSize: getProportionalFontSize(12),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ));
+          } else {
+            LoadingDialog.closeLoadingDialog();
+            // await getCartNew();
+            Utils.showSnackbar(
+                response.data['message'] ?? "Something went wrong!!!");
+          }
+        }
+      }
+    } catch (e) {
+      print(e.toString());
+      LoadingDialog.closeLoadingDialog();
+    }
+  }
+
   Future<void> resetCart() async {
     LoadingDialog.showLoadingDialog();
     int uid = await Storage.getValue(Constants.userId);
@@ -392,6 +493,12 @@ class SignleItemController extends GetxController
     print('Variant is ${variant.name}, ID is ${variant.id}');
     // Additional logic if needed based on the selected variant
     getFoodVariantsById(id: variant.id);
+  }
+
+  void resetState() {
+    isVariantSelected.value = false;
+    selectedVariant.value = Variant('', '');
+    // Reset other relevant state variables if needed
   }
 }
 

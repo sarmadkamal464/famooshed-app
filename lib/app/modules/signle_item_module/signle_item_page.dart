@@ -6,7 +6,6 @@ import 'package:famooshed/app/common/util/exports.dart';
 import 'package:famooshed/app/common/values/app_icons.dart';
 import 'package:famooshed/app/data/models/get_food_details_response.dart';
 import 'package:famooshed/app/modules/signle_item_module/signle_item_controller.dart';
-import 'package:famooshed/app/modules/signle_item_module/single_product_variant_detail_page.dart';
 import 'package:famooshed/app/modules/widgets/custom_back_button.dart';
 import 'package:famooshed/app/modules/widgets/custom_default_button.dart';
 import 'package:famooshed/app/modules/widgets/no_item_found.dart';
@@ -291,11 +290,6 @@ class SignleItemPage extends GetView<SignleItemController> {
             ),
             onChanged: (newValue) {
               singleItemController.updateSelectedVariant(newValue!);
-              // Additional logic if needed based on the selected variant
-              // Call getFoodDetailById with the selected variant ID
-              // singleItemController.getFoodDetailById(id: newValue.id);
-              // singleItemController.getFoodVariantsById(id: newValue.id);
-              Get.to(() => VariantDetailPage());
             },
             items: variants.map((variant) {
               return DropdownMenuItem<Variant>(

@@ -6,7 +6,7 @@ abstract class Constants {
       'https://maps.googleapis.com/maps/api/staticmap?markers=color:0x215034%7Clabel:$label%7C%7C$lat,$lng&zoom=15&size=400x225&key=AIzaSyBlPrKDHq4CtetPgQivrBqsH87JkvLGtQw&scale=4';
   // String.fromEnvironment('https://jsonplaceholder.typicode.com/posts');
 
-  static const timeout = Duration(seconds: 5);
+  static const timeout = Duration(seconds: 6);
   static const String token = 'authToken';
   static const String userId = 'UserId';
   static const String rememberMe = 'rememberMe';
