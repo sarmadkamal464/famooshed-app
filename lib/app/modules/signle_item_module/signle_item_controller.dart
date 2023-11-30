@@ -364,7 +364,8 @@ class SignleItemController extends GetxController
     print(uid);
     try {
       var body = {
-        "id": getVariantsDetailsResponse!.variant?.id,
+        "id": getFoodDetailsResponse!.id,
+        "Variantid": getVariantsDetailsResponse!.variant?.id,
         "qty": counter.value,
         "isApp": true,
         "uid": uid.toString(),
@@ -372,7 +373,7 @@ class SignleItemController extends GetxController
       print('cart body is $body');
       d.Response response =
           await _apiHelper.postApiNew(AppUrl.addToCart, {}, body);
-
+      print('response $response');
       if (response.statusCode == 200) {
         if (response.data['status'] != null &&
             response.data['status'] == true) {
