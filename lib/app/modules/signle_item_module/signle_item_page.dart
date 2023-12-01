@@ -271,32 +271,50 @@ class SignleItemPage extends GetView<SignleItemController> {
           bool variantSelected = singleItemController.isVariantSelected.value;
           Variant selectedVariant = singleItemController.selectedVariant.value;
           String hint = variants.isNotEmpty
-              ? 'See Product Variants'
+              ? 'Please Select Variant'
               : 'No Product Variants';
-          return DropdownButton<Variant>(
-            value: variantSelected ? selectedVariant : null,
-            hint: Text(
-              hint,
-              style: TextStyle(color: Color.fromARGB(255, 31, 61, 32)),
+          return Container(
+            height: 45,
+            decoration: BoxDecoration(
+              border: Border.all(
+                color: Color.fromARGB(
+                    255, 31, 61, 32), // Customize border color if needed
+                width: 2.0, // Customize border width if needed
+              ),
+              borderRadius:
+                  BorderRadius.circular(8.0), // Customize border radius
             ),
-            isExpanded: true,
-            isDense: true,
-            iconSize: 40,
-            elevation: 8,
-            style: const TextStyle(
-              fontFamily: 'SF Pro Display',
-              color: Color.fromARGB(255, 31, 61, 32),
-              fontWeight: FontWeight.bold,
+            child: DropdownButton<Variant>(
+              value: variantSelected ? selectedVariant : null,
+              hint: Padding(
+                padding: const EdgeInsets.all(10.0),
+                child: Text(
+                  hint,
+                  style: TextStyle(color: Color.fromARGB(255, 31, 61, 32)),
+                ),
+              ),
+              isExpanded: true,
+              isDense: true,
+              iconSize: 40,
+              elevation: 8,
+              style: const TextStyle(
+                fontFamily: 'SF Pro Display',
+                color: Color.fromARGB(255, 31, 61, 32),
+                fontWeight: FontWeight.bold,
+              ),
+              onChanged: (newValue) {
+                singleItemController.updateSelectedVariant(newValue!);
+              },
+              items: variants.map((variant) {
+                return DropdownMenuItem<Variant>(
+                  value: variant,
+                  child: Padding(
+                    padding: const EdgeInsets.all(10.0),
+                    child: Text(variant.name),
+                  ),
+                );
+              }).toList(),
             ),
-            onChanged: (newValue) {
-              singleItemController.updateSelectedVariant(newValue!);
-            },
-            items: variants.map((variant) {
-              return DropdownMenuItem<Variant>(
-                value: variant,
-                child: Text(variant.name),
-              );
-            }).toList(),
           );
         }),
         // ... Other UI elements ...
@@ -356,7 +374,9 @@ class SignleItemPage extends GetView<SignleItemController> {
                 fontWeight: FontWeight.w600,
               ),
             ),
-
+            SizedBox(
+              height: 5,
+            ),
             variantDropdown(controller),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,

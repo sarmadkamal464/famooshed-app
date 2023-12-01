@@ -37,74 +37,81 @@ class VariantDetailPage extends GetView<SignleItemController> {
   Widget build(BuildContext context) {
     return GetBuilder<SignleItemController>(
         builder: (SignleItemController signleItemController) {
-      return signleItemController.isLoading.value
-          ? const Scaffold(
-              body: Center(child: CircularProgressIndicator.adaptive()),
-            )
-          : SafeArea(
-              top: false,
-              child: Scaffold(
-                resizeToAvoidBottomInset: false,
-                bottomNavigationBar: Container(
-                  decoration: const BoxDecoration(color: AppColors.white),
-                  child: Padding(
-                    padding: const EdgeInsets.only(
-                        left: 20.0, right: 20.0, top: 10.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [addCartButton()],
+      return WillPopScope(
+        onWillPop: () async {
+          // Reset variant state here
+          signleItemController.resetState();
+          return true; // Allow back button press
+        },
+        child: signleItemController.isLoading.value
+            ? const Scaffold(
+                body: Center(child: CircularProgressIndicator.adaptive()),
+              )
+            : SafeArea(
+                top: false,
+                child: Scaffold(
+                  resizeToAvoidBottomInset: false,
+                  bottomNavigationBar: Container(
+                    decoration: const BoxDecoration(color: AppColors.white),
+                    child: Padding(
+                      padding: const EdgeInsets.only(
+                          left: 20.0, right: 20.0, top: 10.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [addCartButton()],
+                      ),
                     ),
                   ),
-                ),
-                body: DefaultTabController(
-                  length: 2,
-                  child: NestedScrollView(
-                      headerSliverBuilder:
-                          (BuildContext context, bool innerBoxIsScrolled) {
-                        return <Widget>[
-                          SliverAppBar(
-                            title: Padding(
-                              padding: const EdgeInsets.all(8.0),
-                            ),
-                            expandedHeight: 300.0,
-                            floating: false,
-                            pinned: true,
-                            leading: IconButton(
-                              icon: Icon(
-                                Icons.arrow_back,
-                                color: AppColors.black,
+                  body: DefaultTabController(
+                    length: 2,
+                    child: NestedScrollView(
+                        headerSliverBuilder:
+                            (BuildContext context, bool innerBoxIsScrolled) {
+                          return <Widget>[
+                            SliverAppBar(
+                              title: Padding(
+                                padding: const EdgeInsets.all(8.0),
                               ),
-                              onPressed: () {
-                                // Reset state and navigate back
-                                signleItemController.resetState();
-                                Get.back();
-                              },
-                            ),
-                            elevation: 0.0,
-                            backgroundColor: AppColors.white,
-                            systemOverlayStyle: const SystemUiOverlayStyle(
-                              statusBarColor: AppColors.white,
-                              statusBarIconBrightness: Brightness.dark,
-                              statusBarBrightness: Brightness.light,
-                            ),
-                            flexibleSpace: FlexibleSpaceBar(
-                              centerTitle: true,
-                              background: Image.network(
-                                Constants.imgUrl +
-                                    (signleItemController
-                                            .getVariantsDetailsResponse!
-                                            .variantImage ??
-                                        ''),
-                                fit: BoxFit.fitHeight,
+                              expandedHeight: 300.0,
+                              floating: false,
+                              pinned: true,
+                              leading: IconButton(
+                                icon: Icon(
+                                  Icons.arrow_back,
+                                  color: AppColors.black,
+                                ),
+                                onPressed: () {
+                                  // Reset state and navigate back
+                                  signleItemController.resetState();
+                                  Get.back();
+                                },
+                              ),
+                              elevation: 0.0,
+                              backgroundColor: AppColors.white,
+                              systemOverlayStyle: const SystemUiOverlayStyle(
+                                statusBarColor: AppColors.white,
+                                statusBarIconBrightness: Brightness.dark,
+                                statusBarBrightness: Brightness.light,
+                              ),
+                              flexibleSpace: FlexibleSpaceBar(
+                                centerTitle: true,
+                                background: Image.network(
+                                  Constants.imgUrl +
+                                      (signleItemController
+                                              .getVariantsDetailsResponse!
+                                              .variantImage ??
+                                          ''),
+                                  fit: BoxFit.fitHeight,
+                                ),
                               ),
                             ),
-                          ),
-                        ];
-                      },
-                      body: generalDescription(signleItemController)),
+                          ];
+                        },
+                        body: generalDescription(signleItemController)),
+                  ),
                 ),
               ),
-            );
+      );
     });
   }
 

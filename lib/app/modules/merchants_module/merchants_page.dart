@@ -136,7 +136,10 @@ class MerchantsPage extends GetView<MerchantsController> {
                           backgroundColor: AppColors.white,
                           pinned: true,
                           floating: true,
-                          expandedHeight: constraints.maxHeight * 0.5,
+                          expandedHeight: controller.restaurant?.desc != null &&
+                                  controller.restaurant!.desc.isNotEmpty
+                              ? constraints.maxHeight * 0.43
+                              : constraints.maxHeight * 0.28,
                           flexibleSpace: FlexibleSpaceBar(
                             background: merchantInfo(),
                           ),
