@@ -748,7 +748,7 @@ class MerchantsPage extends GetView<MerchantsController> {
                   image: DecorationImage(
                     image: NetworkImage(
                         Constants.imgUrl + controller.foodList[index].image),
-                    fit: BoxFit.fitHeight,
+                    fit: BoxFit.cover,
                   ),
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(8)),
@@ -791,125 +791,105 @@ class MerchantsPage extends GetView<MerchantsController> {
                       //         fontSize: getProportionalFontSize(13)),
                       //   )
                       : SizedBox(),
-                  Row(
-                    children: [
-                      Text(controller.foodList[index].stars.toString()),
-                      SizedBox(
-                        width: getProportionateScreenWidth(2),
-                      ),
-                      Image.asset(AppImages.star)
-                    ],
-                  )
                 ],
               ),
-              Padding(
-                padding: EdgeInsets.only(top: getProportionateScreenHeight(8)),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Expanded(
-                      child: Text(
-                        "£${double.parse(controller.foodList[index].price).toString()}",
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        style: beVietnamProSemiBold.copyWith(
-                            fontSize: getProportionalFontSize(18),
-                            color: AppColors.appThemeText),
-                      ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Expanded(
+                    child: Text(
+                      "£${double.parse(controller.foodList[index].price).toString()}",
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: beVietnamProSemiBold.copyWith(
+                          fontSize: getProportionalFontSize(18),
+                          color: AppColors.appTheme),
                     ),
-                    DefaultRectButton(
-                        buttonColor:
-                            controller.foodList[index].itemStock != null &&
-                                    controller.foodList[index].itemStock! <= 0
-                                ? AppColors.greyText
-                                : AppColors.appTheme,
-                        textColor: AppColors.white,
-                        height: 35,
-                        text: "Add to Cart",
-                        width: Get.width * .25,
-                        onTap: controller.foodList[index].itemStock != null &&
-                                controller.foodList[index].itemStock! <= 0
-                            ? null
-                            : () {
-                                // controller.addToCart(index);
-                                controller.counter.value = 1;
-                                controller.update();
-                                Get.bottomSheet(GetBuilder(
-                                  builder: (MerchantsController controller) {
-                                    return SafeArea(
-                                      child: Container(
-                                        decoration: const BoxDecoration(
-                                            color: AppColors.white),
-                                        child: Padding(
-                                          padding: const EdgeInsets.only(
-                                              left: 20.0,
-                                              right: 20.0,
-                                              top: 10.0),
-                                          child: Row(
-                                            children: [
-                                              Container(
-                                                height: 48,
-                                                width: 90,
-                                                decoration: BoxDecoration(
-                                                    color: AppColors
-                                                        .blueColorLight,
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            5.0)),
-                                                child: Row(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment.center,
-                                                  children: [
-                                                    GestureDetector(
-                                                        onTap: () {
-                                                          controller
-                                                              .decrement();
-                                                        },
-                                                        child: const Icon(
-                                                            Icons.remove)),
-                                                    const SizedBox(width: 10.0),
-                                                    Text(
-                                                        '${controller.counter.value}'),
-                                                    const SizedBox(width: 10.0),
-                                                    GestureDetector(
-                                                        onTap: () {
-                                                          controller
-                                                              .increment();
-                                                        },
-                                                        child: const Icon(
-                                                            Icons.add)),
-                                                  ],
-                                                ),
+                  ),
+                  DefaultRectButton(
+                      buttonColor:
+                          controller.foodList[index].itemStock != null &&
+                                  controller.foodList[index].itemStock! <= 0
+                              ? AppColors.greyText
+                              : AppColors.appTheme,
+                      textColor: AppColors.white,
+                      height: 35,
+                      text: "Add to Cart",
+                      width: Get.width * .25,
+                      onTap: controller.foodList[index].itemStock != null &&
+                              controller.foodList[index].itemStock! <= 0
+                          ? null
+                          : () {
+                              // controller.addToCart(index);
+                              controller.counter.value = 1;
+                              controller.update();
+                              Get.bottomSheet(GetBuilder(
+                                builder: (MerchantsController controller) {
+                                  return SafeArea(
+                                    child: Container(
+                                      decoration: const BoxDecoration(
+                                          color: AppColors.white),
+                                      child: Padding(
+                                        padding: const EdgeInsets.only(
+                                            left: 20.0, right: 20.0, top: 10.0),
+                                        child: Row(
+                                          children: [
+                                            Container(
+                                              height: 48,
+                                              width: 90,
+                                              decoration: BoxDecoration(
+                                                  color:
+                                                      AppColors.blueColorLight,
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          5.0)),
+                                              child: Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.center,
+                                                children: [
+                                                  GestureDetector(
+                                                      onTap: () {
+                                                        controller.decrement();
+                                                      },
+                                                      child: const Icon(
+                                                          Icons.remove)),
+                                                  const SizedBox(width: 10.0),
+                                                  Text(
+                                                      '${controller.counter.value}'),
+                                                  const SizedBox(width: 10.0),
+                                                  GestureDetector(
+                                                      onTap: () {
+                                                        controller.increment();
+                                                      },
+                                                      child: const Icon(
+                                                          Icons.add)),
+                                                ],
                                               ),
-                                              const Spacer(),
-                                              DefaultRectButton(
-                                                  buttonColor:
-                                                      AppColors.appTheme,
-                                                  textColor: AppColors.white,
-                                                  height: 40,
-                                                  text: "Add to Cart",
-                                                  width: Get.width * .3,
-                                                  onTap: () async {
-                                                    // controller.addToCart(index);
+                                            ),
+                                            const Spacer(),
+                                            DefaultRectButton(
+                                                buttonColor: AppColors.appTheme,
+                                                textColor: AppColors.white,
+                                                height: 40,
+                                                text: "Add to Cart",
+                                                width: Get.width * .3,
+                                                onTap: () async {
+                                                  // controller.addToCart(index);
 
-                                                    await controller
-                                                        .addToCartNew(controller
-                                                            .foodList[index]);
-                                                  })
-                                            ],
-                                          ),
+                                                  await controller.addToCartNew(
+                                                      controller
+                                                          .foodList[index]);
+                                                })
+                                          ],
                                         ),
                                       ),
-                                    );
-                                  },
-                                ));
-                              })
-                  ],
-                ),
+                                    ),
+                                  );
+                                },
+                              ));
+                            })
+                ],
               ),
-              const SizedBox(
-                height: 10,
-              )
             ],
           ),
         ),
