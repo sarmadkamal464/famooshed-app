@@ -36,196 +36,210 @@ class MerchantsPage extends GetView<MerchantsController> {
       init: MerchantsController(),
       initState: (_) {},
       builder: (_) {
-        return DefaultTabController(
-          length: 3,
-          child: GetBuilder<MerchantsController>(
-            builder: (controller) {
-              return Scaffold(
-                backgroundColor: AppColors.white,
-                appBar:
+        return Scaffold(
+          backgroundColor: AppColors.white,
+          appBar:
 
-                    // CustomAppbarWidget(
-                    //   centerTitle: true,
-                    //   // title: controller.merchantName.value,
-                    //   title: "Merchants",
-                    //   backgroundColor: AppColors.white,
-                    //   statusBarColor: AppColors.white,
-                    //   actions: <Widget>[
-                    //     InkWell(
-                    //         onTap: () async {
-                    //           // Get.toNamed(Routes.CART);
-                    //           var result = await Get.toNamed(Routes.CART);
-                    //
-                    //           if (result != null) {
-                    //             controller.getBasket();
-                    //           }
-                    //         },
-                    //         child: Padding(
-                    //           padding: const EdgeInsets.all(8.0),
-                    //           child: shoppingCartBadge(),
-                    //         )),
-                    //   ],
-                    // ),
-                    AppBar(
-                  leading: CustomBackButton(
-                    onBackTap: () {
-                      Get.back();
-                    },
-                    backbuttonColor: AppColors.appTheme,
-                  ),
-                  leadingWidth: 45.w,
-                  title: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        "Merchants",
-                        style: beVietnamProaBold24.copyWith(
-                            color: AppColors.appTheme),
-                      ),
-                      // controller.restaurant != null &&
-                      //         controller.restaurant!.isFeatured == 1
-                      //     ? Container(
-                      //         margin: EdgeInsets.only(
-                      //             left: getProportionateScreenWidth(8)),
-                      //         height: getProportionateScreenHeight(25),
-                      //         width: getProportionateScreenWidth(25),
-                      //         alignment: Alignment.center,
-                      //         decoration: BoxDecoration(
-                      //             shape: BoxShape.circle,
-                      //             color: AppColors.appTheme),
-                      //         child: SvgPicture.asset(
-                      //           AppIcons.reward,
-                      //           fit: BoxFit.cover,
-                      //           color: Colors.white,
-                      //           width: getProportionateScreenWidth(16),
-                      //           height: getProportionateScreenHeight(16),
-                      //         ),
-                      //       )
-                      //     : SizedBox(),
-                    ],
-                  ),
-                  centerTitle: true,
-                  backgroundColor: AppColors.white,
-                  systemOverlayStyle: SystemUiOverlayStyle(
-                      statusBarColor: AppColors.white,
-                      statusBarIconBrightness: Brightness.dark,
-                      statusBarBrightness: Brightness.light,
-                      systemNavigationBarColor: Colors.transparent),
-                  elevation: 0,
-                  actions: <Widget>[
-                    InkWell(
-                        onTap: () async {
-                          // Get.toNamed(Routes.CART);
-                          var result = await Get.toNamed(Routes.CART);
-
-                          if (result != null) {
-                            // controller.getBasket();
-                            controller.getCartNew();
-                          }
-                        },
-                        child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: shoppingCartBadge(),
-                        )),
-                  ],
+              // CustomAppbarWidget(
+              //   centerTitle: true,
+              //   // title: controller.merchantName.value,
+              //   title: "Merchants",
+              //   backgroundColor: AppColors.white,
+              //   statusBarColor: AppColors.white,
+              //   actions: <Widget>[
+              //     InkWell(
+              //         onTap: () async {
+              //           // Get.toNamed(Routes.CART);
+              //           var result = await Get.toNamed(Routes.CART);
+              //
+              //           if (result != null) {
+              //             controller.getBasket();
+              //           }
+              //         },
+              //         child: Padding(
+              //           padding: const EdgeInsets.all(8.0),
+              //           child: shoppingCartBadge(),
+              //         )),
+              //   ],
+              // ),
+              AppBar(
+            leading: CustomBackButton(
+              onBackTap: () {
+                Get.back();
+              },
+              backbuttonColor: AppColors.appTheme,
+            ),
+            leadingWidth: 45.w,
+            title: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  "Merchants",
+                  style:
+                      beVietnamProaBold24.copyWith(color: AppColors.appTheme),
                 ),
-                body: controller.isLoading.value
-                    ? const CircularProgressIndicator(
-                        color: Colors.transparent,
-                      )
-                    : SafeArea(
-                        child: Column(
-                          children: [
-                            merchantInfo(),
-                            // SizedBox(height: getProportionateScreenHeight(5)),
-                            // _tabSection(context),
-                            SizedBox(
-                              height: getProportionateScreenHeight(60),
-                              child: TabBar(
-                                  automaticIndicatorColorAdjustment: true,
-                                  indicatorColor: AppColors.appTheme,
-                                  labelColor: AppColors.appTheme,
-                                  unselectedLabelColor: AppColors.appTheme,
-                                  labelStyle: beVietnamProaBold.copyWith(
-                                    color: Color(0xFF204F33),
-                                    fontSize: 18,
-                                    fontWeight: FontWeight.w600,
-                                  ),
-                                  tabs: [
-                                    Tab(text: Strings.products),
-                                    Tab(text: Strings.offers),
-                                    Tab(text: Strings.reviews),
-                                  ]),
-                            ),
-                            Expanded(
-                              //Add this to give height
-                              // height: MediaQuery.of(context).size.height,
-                              child: TabBarView(children: [
-                                product(),
-                                offerPage(),
-                                reviewPage(),
-                              ]),
-                            ),
-                          ],
-                        ),
-                      ),
-              );
-            },
+                // controller.restaurant != null &&
+                //         controller.restaurant!.isFeatured == 1
+                //     ? Container(
+                //         margin: EdgeInsets.only(
+                //             left: getProportionateScreenWidth(8)),
+                //         height: getProportionateScreenHeight(25),
+                //         width: getProportionateScreenWidth(25),
+                //         alignment: Alignment.center,
+                //         decoration: BoxDecoration(
+                //             shape: BoxShape.circle,
+                //             color: AppColors.appTheme),
+                //         child: SvgPicture.asset(
+                //           AppIcons.reward,
+                //           fit: BoxFit.cover,
+                //           color: Colors.white,
+                //           width: getProportionateScreenWidth(16),
+                //           height: getProportionateScreenHeight(16),
+                //         ),
+                //       )
+                //     : SizedBox(),
+              ],
+            ),
+            centerTitle: true,
+            backgroundColor: AppColors.white,
+            systemOverlayStyle: SystemUiOverlayStyle(
+                statusBarColor: AppColors.white,
+                statusBarIconBrightness: Brightness.dark,
+                statusBarBrightness: Brightness.light,
+                systemNavigationBarColor: Colors.transparent),
+            elevation: 0,
+            actions: <Widget>[
+              InkWell(
+                onTap: () async {
+// Get.toNamed(Routes.CART);
+                  var result = await Get.toNamed(Routes.CART);
+
+                  if (result != null) {
+                    // controller.getBasket();
+                    _.getCartNew(); // Assuming controller instance is accessible here
+                  }
+                },
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: shoppingCartBadge(),
+                ),
+              ),
+            ],
           ),
+          body: _.isLoading.value
+              ? const CircularProgressIndicator(color: Colors.transparent)
+              : LayoutBuilder(
+                  builder: (context, constraints) {
+                    return CustomScrollView(
+                      slivers: [
+                        SliverAppBar(
+                          backgroundColor: AppColors.white,
+                          pinned: true,
+                          floating: true,
+                          expandedHeight: controller.restaurant?.desc != null &&
+                                  controller.restaurant!.desc.isNotEmpty
+                              ? constraints.maxHeight * 0.43
+                              : constraints.maxHeight * 0.28,
+                          flexibleSpace: FlexibleSpaceBar(
+                            background: merchantInfo(),
+                          ),
+                          // Add actions or other SliverAppBar properties if needed
+                        ),
+                        SliverFillRemaining(
+                          child: DefaultTabController(
+                            length: 3,
+                            child: Column(
+                              children: [
+                                SizedBox(
+                                  height: getProportionateScreenHeight(60),
+                                  child: TabBar(
+                                    automaticIndicatorColorAdjustment: true,
+                                    indicatorColor: AppColors.appTheme,
+                                    labelColor: AppColors.appTheme,
+                                    unselectedLabelColor: AppColors.appTheme,
+                                    labelStyle: beVietnamProaBold.copyWith(
+                                      color: Color(0xFF204F33),
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                    tabs: [
+                                      Tab(text: Strings.products),
+                                      Tab(text: Strings.offers),
+                                      Tab(text: Strings.reviews),
+                                    ],
+                                  ),
+                                ),
+                                Expanded(
+                                  child: TabBarView(children: [
+                                    product(),
+                                    offerPage(),
+                                    reviewPage(),
+                                  ]),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ],
+                    );
+                  },
+                ),
         );
       },
     );
   }
 
   merchantInfo() {
-    return Column(
-      children: [
-        merchentName(),
-        SizedBox(
-          height: getProportionateScreenHeight(8),
-        ),
-        productAndLocation(),
-        SizedBox(
-          height: getProportionateScreenHeight(8),
-        ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const Iconify(
-              size: 18,
-              Uil.map_marker,
-              color: AppColors.doveGray,
-            ),
-            const SizedBox(
-              width: 5,
-            ),
-            Flexible(
-              child: Text(
-                "${controller.restaurant!.businessAddress}",
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-                style: urbanistSemiBold.copyWith(
-                    overflow: TextOverflow.ellipsis,
-                    color: AppColors.doveGray,
-                    fontSize: 14),
+    return SingleChildScrollView(
+      child: Column(
+        children: [
+          merchentName(),
+          SizedBox(
+            height: getProportionateScreenHeight(8),
+          ),
+          productAndLocation(),
+          SizedBox(
+            height: getProportionateScreenHeight(8),
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const Iconify(
+                size: 18,
+                Uil.map_marker,
+                color: AppColors.doveGray,
               ),
-            )
-          ],
-        ),
-        // SizedBox(height: getProportionateScreenHeight(7)),
-        // propertiesSection(),
-        // SizedBox(height: getProportionateScreenHeight(9)),
-        // DefaultButton(
-        //     height: getProportionateScreenHeight(44),
-        //     buttonColor: AppColors.appTheme,
-        //     textStyle:
-        //         urbanistBold.copyWith(fontSize: 18, color: AppColors.white),
-        //     text: "Contact",
-        //     width: Get.width * .4,
-        //     onTap: () {}),
+              const SizedBox(
+                width: 5,
+              ),
+              Flexible(
+                child: Text(
+                  "${controller.restaurant!.businessAddress}",
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: urbanistSemiBold.copyWith(
+                      overflow: TextOverflow.ellipsis,
+                      color: AppColors.doveGray,
+                      fontSize: 14),
+                ),
+              )
+            ],
+          ),
+          // SizedBox(height: getProportionateScreenHeight(7)),
+          // propertiesSection(),
+          // SizedBox(height: getProportionateScreenHeight(9)),
+          // DefaultButton(
+          //     height: getProportionateScreenHeight(44),
+          //     buttonColor: AppColors.appTheme,
+          //     textStyle:
+          //         urbanistBold.copyWith(fontSize: 18, color: AppColors.white),
+          //     text: "Contact",
+          //     width: Get.width * .4,
+          //     onTap: () {}),
 
-        merchantsDecription()
-      ],
+          merchantsDecription()
+        ],
+      ),
     );
   }
 
@@ -737,7 +751,7 @@ class MerchantsPage extends GetView<MerchantsController> {
                   image: DecorationImage(
                     image: NetworkImage(
                         Constants.imgUrl + controller.foodList[index].image),
-                    fit: BoxFit.fill,
+                    fit: BoxFit.cover,
                   ),
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(8)),
@@ -780,125 +794,105 @@ class MerchantsPage extends GetView<MerchantsController> {
                       //         fontSize: getProportionalFontSize(13)),
                       //   )
                       : SizedBox(),
-                  Row(
-                    children: [
-                      Text(controller.foodList[index].stars.toString()),
-                      SizedBox(
-                        width: getProportionateScreenWidth(2),
-                      ),
-                      Image.asset(AppImages.star)
-                    ],
-                  )
                 ],
               ),
-              Padding(
-                padding: EdgeInsets.only(top: getProportionateScreenHeight(8)),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Expanded(
-                      child: Text(
-                        "£${double.parse(controller.foodList[index].price).toInt().toString()}",
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        style: beVietnamProSemiBold.copyWith(
-                            fontSize: getProportionalFontSize(18),
-                            color: AppColors.appThemeText),
-                      ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Expanded(
+                    child: Text(
+                      "£${double.parse(controller.foodList[index].price).toString()}",
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: beVietnamProSemiBold.copyWith(
+                          fontSize: getProportionalFontSize(18),
+                          color: AppColors.appTheme),
                     ),
-                    DefaultRectButton(
-                        buttonColor:
-                            controller.foodList[index].itemStock != null &&
-                                    controller.foodList[index].itemStock! <= 0
-                                ? AppColors.greyText
-                                : AppColors.appTheme,
-                        textColor: AppColors.white,
-                        height: 35,
-                        text: "Add to Cart",
-                        width: Get.width * .25,
-                        onTap: controller.foodList[index].itemStock != null &&
-                                controller.foodList[index].itemStock! <= 0
-                            ? null
-                            : () {
-                                // controller.addToCart(index);
-                                controller.counter.value = 1;
-                                controller.update();
-                                Get.bottomSheet(GetBuilder(
-                                  builder: (MerchantsController controller) {
-                                    return SafeArea(
-                                      child: Container(
-                                        decoration: const BoxDecoration(
-                                            color: AppColors.white),
-                                        child: Padding(
-                                          padding: const EdgeInsets.only(
-                                              left: 20.0,
-                                              right: 20.0,
-                                              top: 10.0),
-                                          child: Row(
-                                            children: [
-                                              Container(
-                                                height: 48,
-                                                width: 90,
-                                                decoration: BoxDecoration(
-                                                    color: AppColors
-                                                        .blueColorLight,
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            5.0)),
-                                                child: Row(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment.center,
-                                                  children: [
-                                                    GestureDetector(
-                                                        onTap: () {
-                                                          controller
-                                                              .decrement();
-                                                        },
-                                                        child: const Icon(
-                                                            Icons.remove)),
-                                                    const SizedBox(width: 10.0),
-                                                    Text(
-                                                        '${controller.counter.value}'),
-                                                    const SizedBox(width: 10.0),
-                                                    GestureDetector(
-                                                        onTap: () {
-                                                          controller
-                                                              .increment();
-                                                        },
-                                                        child: const Icon(
-                                                            Icons.add)),
-                                                  ],
-                                                ),
+                  ),
+                  DefaultRectButton(
+                      buttonColor:
+                          controller.foodList[index].itemStock != null &&
+                                  controller.foodList[index].itemStock! <= 0
+                              ? AppColors.greyText
+                              : AppColors.appTheme,
+                      textColor: AppColors.white,
+                      height: 35,
+                      text: "Add to Cart",
+                      width: Get.width * .25,
+                      onTap: controller.foodList[index].itemStock != null &&
+                              controller.foodList[index].itemStock! <= 0
+                          ? null
+                          : () {
+                              // controller.addToCart(index);
+                              controller.counter.value = 1;
+                              controller.update();
+                              Get.bottomSheet(GetBuilder(
+                                builder: (MerchantsController controller) {
+                                  return SafeArea(
+                                    child: Container(
+                                      decoration: const BoxDecoration(
+                                          color: AppColors.white),
+                                      child: Padding(
+                                        padding: const EdgeInsets.only(
+                                            left: 20.0, right: 20.0, top: 10.0),
+                                        child: Row(
+                                          children: [
+                                            Container(
+                                              height: 48,
+                                              width: 90,
+                                              decoration: BoxDecoration(
+                                                  color:
+                                                      AppColors.blueColorLight,
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          5.0)),
+                                              child: Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.center,
+                                                children: [
+                                                  GestureDetector(
+                                                      onTap: () {
+                                                        controller.decrement();
+                                                      },
+                                                      child: const Icon(
+                                                          Icons.remove)),
+                                                  const SizedBox(width: 10.0),
+                                                  Text(
+                                                      '${controller.counter.value}'),
+                                                  const SizedBox(width: 10.0),
+                                                  GestureDetector(
+                                                      onTap: () {
+                                                        controller.increment();
+                                                      },
+                                                      child: const Icon(
+                                                          Icons.add)),
+                                                ],
                                               ),
-                                              const Spacer(),
-                                              DefaultRectButton(
-                                                  buttonColor:
-                                                      AppColors.appTheme,
-                                                  textColor: AppColors.white,
-                                                  height: 40,
-                                                  text: "Add to Cart",
-                                                  width: Get.width * .3,
-                                                  onTap: () async {
-                                                    // controller.addToCart(index);
+                                            ),
+                                            const Spacer(),
+                                            DefaultRectButton(
+                                                buttonColor: AppColors.appTheme,
+                                                textColor: AppColors.white,
+                                                height: 40,
+                                                text: "Add to Cart",
+                                                width: Get.width * .3,
+                                                onTap: () async {
+                                                  // controller.addToCart(index);
 
-                                                    await controller
-                                                        .addToCartNew(controller
-                                                            .foodList[index]);
-                                                  })
-                                            ],
-                                          ),
+                                                  await controller.addToCartNew(
+                                                      controller
+                                                          .foodList[index]);
+                                                })
+                                          ],
                                         ),
                                       ),
-                                    );
-                                  },
-                                ));
-                              })
-                  ],
-                ),
+                                    ),
+                                  );
+                                },
+                              ));
+                            })
+                ],
               ),
-              const SizedBox(
-                height: 10,
-              )
             ],
           ),
         ),
