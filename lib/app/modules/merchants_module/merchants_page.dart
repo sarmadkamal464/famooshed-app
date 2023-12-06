@@ -745,8 +745,8 @@ class MerchantsPage extends GetView<MerchantsController> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Container(
-                width: getProportionateScreenWidth(160),
-                height: getProportionateScreenHeight(150),
+                width: getProportionateScreenWidth(170),
+                height: getProportionateScreenHeight(183),
                 decoration: ShapeDecoration(
                   image: DecorationImage(
                     image: NetworkImage(
