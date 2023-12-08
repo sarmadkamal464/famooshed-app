@@ -128,6 +128,8 @@ class FindByCategoryController extends GetxController {
   final ApiHelper _apiHelper = ApiHelper.to;
   dynamic catId = Get.arguments;
   RxBool isLoading = true.obs;
+
+
   final RxList<Resturneartous> _categoryData = RxList();
   List<Resturneartous> get categoryData => _categoryData;
   set categoryData(List<Resturneartous> categoryData) =>
@@ -234,35 +236,23 @@ class FindByCategoryController extends GetxController {
       print('Response data: ${response.data}');
 
       var responseData = GetRestaurantByCatNewResponse.fromJson(response.data);
-
-      print('Parsed response: $responseData');
-
-      // if (responseData.allcat != null) {
-      //   alCat.clear();
-      //   alCat.addAll(responseData.allcat!);
-      // }
-
-      // if (responseData.category != null) {
-      //   categoryy.clear();
-      //   categoryy.addAll(responseData.category!);
-      // }
       if (alCat.isNotEmpty) {
         alCat.clear();
-        alCat = await responseData.allcat;
+        alCat =  responseData.allcat;
       } else {
-        alCat = await responseData.allcat;
+        alCat =  responseData.allcat;
       }
       if (categoryy.isNotEmpty) {
         categoryy.clear();
-        categoryy = await responseData.category;
+        categoryy =  responseData.category;
       } else {
-        categoryy = await responseData.category;
+        categoryy =  responseData.category;
       }
       if (categoryData.isNotEmpty) {
         categoryData.clear();
-        categoryData = await responseData.resturneartous!;
+        categoryData =  responseData.resturneartous!;
       } else {
-        categoryData = await responseData.resturneartous!;
+        categoryData =  responseData.resturneartous!;
       }
     } catch (e) {
       // Handle any errors that might occur during the API call
