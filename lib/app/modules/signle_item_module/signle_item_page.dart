@@ -270,6 +270,10 @@ class SignleItemPage extends GetView<SignleItemController> {
         Obx(() {
           bool variantSelected = singleItemController.isVariantSelected.value;
           Variant selectedVariant = singleItemController.selectedVariant.value;
+          if (variants.isEmpty) {
+            return SizedBox
+                .shrink(); // Returns an empty SizedBox if variants list is empty
+          }
           String hint = variants.isNotEmpty
               ? 'Please Select Variant'
               : 'No Product Variants';

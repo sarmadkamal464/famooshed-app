@@ -15,6 +15,8 @@ abstract class AppUrl {
   static const getBasket = "getBasket";
   static const notify = "notify";
   static const getRestaurantByCat = "getRestaurantByCat?restaurant=";
+  static const getRestaurantByCatNew =
+      "${Constants.baseUrlNew}getFoodByCatLocation?cat_id=";
   static const saveAddress = "saveAddress";
   static const getAddress = "getAddress";
   static const getResDeliver = "getResDeliver";

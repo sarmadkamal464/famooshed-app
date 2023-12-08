@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:famooshed/app/common/constants.dart';
 import 'package:famooshed/app/common/values/app_icons.dart';
+import 'package:famooshed/app/data/models/get_restaurants_by_cat_response_new.dart';
 import 'package:famooshed/app/modules/find_by_category_module/find_by_category_controller.dart';
 import 'package:famooshed/app/modules/widgets/custom_appbar_widget.dart';
 import 'package:famooshed/app/routes/app_pages.dart';
@@ -35,7 +36,7 @@ class FindByCategoryPage extends GetView<FindByCategoryController> {
           builder: (FindByCategoryController findByCategoryController) {
             return Column(
               children: [
-                findByCategoryController.category.isNotEmpty
+                findByCategoryController.categoryData.isNotEmpty
                     ? Padding(
                         padding: const EdgeInsets.symmetric(
                             horizontal: 10, vertical: 10),
@@ -55,7 +56,7 @@ class FindByCategoryPage extends GetView<FindByCategoryController> {
                             ),
                             const SizedBox(width: 10),
                             Text(
-                              findByCategoryController.category[0].name,
+                              findByCategoryController.categoryData[0].name,
                               style: beVietnamProSemiBold.copyWith(
                                 color: const Color(0xFF204F33),
                                 fontSize: 20,
@@ -81,7 +82,7 @@ class FindByCategoryPage extends GetView<FindByCategoryController> {
                                           findByCategoryController.update();
                                           Get.back();
                                           findByCategoryController
-                                              .getCategoryData();
+                                              .getCategoryDataNew();
                                         },
                                         child: Padding(
                                           padding: EdgeInsets.symmetric(
