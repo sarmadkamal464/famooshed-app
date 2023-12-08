@@ -1,10 +1,14 @@
 class GetRestaurantByCatNewResponse {
   List<Resturneartous>? resturneartous;
   Map<String, Vendordetailbycat>? vendordetailbycat;
+  List<AllCat> category;
+  List<AllCat> allcat;
 
   GetRestaurantByCatNewResponse({
     this.resturneartous,
     this.vendordetailbycat,
+    required this.category,
+    required this.allcat,
   });
   factory GetRestaurantByCatNewResponse.fromJson(Map<String, dynamic> json) {
     List<Resturneartous>? resturneartousList;
@@ -12,14 +16,9 @@ class GetRestaurantByCatNewResponse {
       resturneartousList = List<Resturneartous>.from(
         json['resturneartous'].map((x) => Resturneartous.fromJson(x)),
       );
+    } else {
+      resturneartousList = [];
     }
-    // Map<String, Vendordetailbycat>? vendordetailbycatMap;
-    // if (json['vendordetailbycat'] != null) {
-    //   vendordetailbycatMap = Map<String, Vendordetailbycat>.fromEntries(
-    //       json['vendordetailbycat'].map((e) =>
-    //           MapEntry<String, Vendordetailbycat>(
-    //               e.key, Vendordetailbycat.fromJson(e.value))));
-    // }
     Map<String, Vendordetailbycat>? vendordetailbycatMap;
     if (json['vendordetailbycat'] != null &&
         json['vendordetailbycat'] is Map<String, dynamic>) {
@@ -35,10 +34,24 @@ class GetRestaurantByCatNewResponse {
       // Handle the case when vendordetailbycat is empty or not present
       vendordetailbycatMap = {};
     }
+    List<AllCat>? categoryList;
+    if (json['category'] != null) {
+      categoryList = List<AllCat>.from(
+        json['category'].map((x) => AllCat.fromJson(x)),
+      );
+    }
 
+    List<AllCat>? allcatList;
+    if (json['allcat'] != null) {
+      allcatList = List<AllCat>.from(
+        json['allcat'].map((x) => AllCat.fromJson(x)),
+      );
+    }
     return GetRestaurantByCatNewResponse(
       resturneartous: resturneartousList,
       vendordetailbycat: vendordetailbycatMap,
+      category: categoryList ?? [],
+      allcat: allcatList ?? [],
     );
   }
 
@@ -51,6 +64,30 @@ class GetRestaurantByCatNewResponse {
   bool hasVendordetailbycat() {
     return vendordetailbycat != null && vendordetailbycat!.isNotEmpty;
   }
+}
+
+class AllCat {
+  late int id;
+  late String name;
+  late String filename;
+
+  AllCat({
+    required this.id,
+    required this.name,
+    required this.filename,
+  });
+
+  factory AllCat.fromJson(Map<String, dynamic> json) => AllCat(
+        id: json["id"],
+        name: json["name"],
+        filename: json["filename"] ?? '',
+      );
+
+  Map<String, dynamic> toJson() => {
+        "id": id,
+        "name": name,
+        "filename": filename,
+      };
 }
 
 class Resturneartous {

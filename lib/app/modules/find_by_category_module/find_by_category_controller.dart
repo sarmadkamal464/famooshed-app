@@ -1,3 +1,113 @@
+// import 'package:famooshed/app/common/values/app_urls.dart';
+// import 'package:famooshed/app/data/api_helper.dart';
+// import 'package:famooshed/app/data/models/get_restaurants_by_cat_response.dart';
+// import 'package:famooshed/app/data/models/get_restaurants_by_cat_response_new.dart';
+// import 'package:famooshed/app/modules/dashboard_module/dashboard_controller.dart';
+// import 'package:famooshed/app/routes/app_pages.dart';
+// import 'package:dio/dio.dart';
+// import 'package:get/get.dart';
+
+// class FindByCategoryController extends GetxController {
+//   @override
+//   void onReady() {
+//     getCategoryData();
+//     super.onReady();
+//   }
+
+//   final ApiHelper _apiHelper = ApiHelper.to;
+//   dynamic catId = Get.arguments;
+//   RxBool isLoading = true.obs;
+//   final RxList<Resturneartous> _categoryData = RxList();
+//   List<Resturneartous> get categoryData => _categoryData;
+//   set categoryData(List<Resturneartous> categoryData) =>
+//       _categoryData.addAll(categoryData);
+
+//   // void setCategoryDetailData(GetRestaurantByCatNewResponse value) =>
+//   //     categoryData.value = value;
+//   final RxList<Allcat> _allCat = RxList();
+//   List<Allcat> get allCat => _allCat;
+//   set allCat(List<Allcat> allCat) => _allCat.addAll(allCat);
+
+//   final RxList<RestaurantByCat> _restaurByCat = RxList();
+//   List<RestaurantByCat> get restaurByCat => _restaurByCat;
+//   set restaurByCat(List<RestaurantByCat> restaurByCat) =>
+//       _restaurByCat.addAll(restaurByCat);
+//   final RxList<Allcat> _category = RxList();
+//   List<Allcat> get category => _category;
+//   set category(List<Allcat> category) => _category.addAll(category);
+//   final dio = Dio();
+
+//   getCategoryData() {
+//     _apiHelper
+//         .getRestaurantsByCat(AppUrl.getRestaurantByCat + catId.toString())
+//         .futureValue(
+//       (value) {
+//         var response = GetRestaurantByCatResponse.fromJson(value);
+
+//         if (allCat.isNotEmpty) {
+//           allCat.clear();
+//           allCat = response.allcat;
+//         } else {
+//           allCat = response.allcat;
+//         }
+
+//         if (category.isNotEmpty) {
+//           category.clear();
+//           category = response.category;
+//         } else {
+//           category = response.category;
+//         }
+
+//         if (restaurByCat.isNotEmpty) {
+//           restaurByCat.clear();
+//           restaurByCat = response.restaurantByCat;
+//         } else {
+//           restaurByCat = response.restaurantByCat;
+//         }
+
+//         update();
+//       },
+//       retryFunction: getCategoryData,
+//     );
+//   }
+
+//   Future<void> getCategoryDataNew() async {
+//     DashboardController dashboardController = Get.find<DashboardController>();
+//     double latitude = dashboardController.lat.value;
+//     double longitude = dashboardController.lng.value;
+//     String apiUrl = AppUrl.getRestaurantByCatNew + 266.toString();
+
+//     // Add latitude and longitude to the URL as query parameters
+//     apiUrl += '&restlat=$latitude&restlongi=$longitude';
+
+//     try {
+//       print('Fetching data from: $apiUrl');
+//       var response = await dio.get(apiUrl);
+
+//       // Verify the response status code and data content
+//       print('Response status code: ${response.statusCode}');
+//       print('Response data: ${response.data}');
+
+//       var responseData = GetRestaurantByCatNewResponse.fromJson(response.data);
+
+//       print('Parsed response: $responseData');
+//       print('API called');
+//       if (categoryData.isNotEmpty) {
+//         categoryData.clear();
+//         categoryData = responseData.resturneartous!;
+//       } else {
+//         categoryData = responseData.resturneartous!;
+//       }
+//     } catch (e) {
+//       // Handle any errors that might occur during the API call
+//       print('Error: $e');
+//     }
+//   }
+
+//   goToDetailPage(index) {
+//     Get.toNamed(Routes.SIGNLE_ITEM, arguments: category[index].id);
+//   }
+// }
 import 'package:famooshed/app/common/values/app_urls.dart';
 import 'package:famooshed/app/data/api_helper.dart';
 import 'package:famooshed/app/data/models/get_restaurants_by_cat_response.dart';
@@ -10,7 +120,8 @@ import 'package:get/get.dart';
 class FindByCategoryController extends GetxController {
   @override
   void onReady() {
-    getCategoryData();
+    getCategoryDataNew();
+
     super.onReady();
   }
 
@@ -21,9 +132,14 @@ class FindByCategoryController extends GetxController {
   List<Resturneartous> get categoryData => _categoryData;
   set categoryData(List<Resturneartous> categoryData) =>
       _categoryData.addAll(categoryData);
+  final RxList<AllCat> _alCat = RxList();
+  List<AllCat> get alCat => _alCat;
+  set alCat(List<AllCat> alCat) => _alCat.addAll(alCat);
 
-  // void setCategoryDetailData(GetRestaurantByCatNewResponse value) =>
-  //     categoryData.value = value;
+  final RxList<AllCat> _categoryy = RxList();
+  List<AllCat> get categoryy => _categoryy;
+  set categoryy(List<AllCat> categoryy) => _categoryy.addAll(categoryy);
+// Previous Implementation
   final RxList<Allcat> _allCat = RxList();
   List<Allcat> get allCat => _allCat;
   set allCat(List<Allcat> allCat) => _allCat.addAll(allCat);
@@ -64,18 +180,49 @@ class FindByCategoryController extends GetxController {
         } else {
           restaurByCat = response.restaurantByCat;
         }
-
         update();
       },
       retryFunction: getCategoryData,
     );
   }
 
+  // Future<void> getCategoryDataNew() async {
+  //   DashboardController dashboardController = Get.find<DashboardController>();
+  //   double latitude = dashboardController.lat.value;
+  //   double longitude = dashboardController.lng.value;
+  //   String apiUrl = AppUrl.getRestaurantByCatNew + 266.toString();
+
+  //   // Add latitude and longitude to the URL as query parameters
+  //   apiUrl += '&restlat=$latitude&restlongi=$longitude';
+
+  //   try {
+  //     print('Fetching data from: $apiUrl');
+  //     var response = await dio.get(apiUrl);
+
+  //     print('Response data: ${response.data}');
+
+  //     var responseData =
+  //         await GetRestaurantByCatNewResponse.fromJson(response.data);
+
+  //     print('Parsed response: $responseData');
+
+  //     if (categoryData.isNotEmpty) {
+  //       categoryData.clear();
+  //       categoryData = await responseData.resturneartous!;
+  //     } else {
+  //       categoryData = await responseData.resturneartous!;
+  //     }
+  //   } catch (e) {
+  //     // Handle any errors that might occur during the API call
+  //     print('Error: $e');
+  //   }
+  // }
+
   Future<void> getCategoryDataNew() async {
     DashboardController dashboardController = Get.find<DashboardController>();
     double latitude = dashboardController.lat.value;
     double longitude = dashboardController.lng.value;
-    String apiUrl = AppUrl.getRestaurantByCatNew + 266.toString();
+    String apiUrl = AppUrl.getRestaurantByCatNew + catId.toString();
 
     // Add latitude and longitude to the URL as query parameters
     apiUrl += '&restlat=$latitude&restlongi=$longitude';
@@ -84,19 +231,38 @@ class FindByCategoryController extends GetxController {
       print('Fetching data from: $apiUrl');
       var response = await dio.get(apiUrl);
 
-      // Verify the response status code and data content
-      print('Response status code: ${response.statusCode}');
       print('Response data: ${response.data}');
 
       var responseData = GetRestaurantByCatNewResponse.fromJson(response.data);
 
       print('Parsed response: $responseData');
-      print('API called');
+
+      // if (responseData.allcat != null) {
+      //   alCat.clear();
+      //   alCat.addAll(responseData.allcat!);
+      // }
+
+      // if (responseData.category != null) {
+      //   categoryy.clear();
+      //   categoryy.addAll(responseData.category!);
+      // }
+      if (alCat.isNotEmpty) {
+        alCat.clear();
+        alCat = await responseData.allcat;
+      } else {
+        alCat = await responseData.allcat;
+      }
+      if (categoryy.isNotEmpty) {
+        categoryy.clear();
+        categoryy = await responseData.category;
+      } else {
+        categoryy = await responseData.category;
+      }
       if (categoryData.isNotEmpty) {
         categoryData.clear();
-        categoryData = responseData.resturneartous!;
+        categoryData = await responseData.resturneartous!;
       } else {
-        categoryData = responseData.resturneartous!;
+        categoryData = await responseData.resturneartous!;
       }
     } catch (e) {
       // Handle any errors that might occur during the API call

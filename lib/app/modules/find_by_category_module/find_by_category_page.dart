@@ -1,7 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:famooshed/app/common/constants.dart';
 import 'package:famooshed/app/common/values/app_icons.dart';
-import 'package:famooshed/app/data/models/get_restaurants_by_cat_response_new.dart';
 import 'package:famooshed/app/modules/find_by_category_module/find_by_category_controller.dart';
 import 'package:famooshed/app/modules/widgets/custom_appbar_widget.dart';
 import 'package:famooshed/app/routes/app_pages.dart';
@@ -36,7 +35,7 @@ class FindByCategoryPage extends GetView<FindByCategoryController> {
           builder: (FindByCategoryController findByCategoryController) {
             return Column(
               children: [
-                findByCategoryController.categoryData.isNotEmpty
+                findByCategoryController.categoryy.isNotEmpty
                     ? Padding(
                         padding: const EdgeInsets.symmetric(
                             horizontal: 10, vertical: 10),
@@ -48,7 +47,7 @@ class FindByCategoryPage extends GetView<FindByCategoryController> {
                                   backgroundColor: AppColors.white,
                                   child: Image.network(Constants.imgUrl +
                                       findByCategoryController
-                                          .category[0].image)
+                                          .categoryy[0].filename)
 
                                   // SvgPicture.asset(AppIcons.heart),
 
@@ -56,7 +55,7 @@ class FindByCategoryPage extends GetView<FindByCategoryController> {
                             ),
                             const SizedBox(width: 10),
                             Text(
-                              findByCategoryController.categoryData[0].name,
+                              findByCategoryController.categoryy[0].name,
                               style: beVietnamProSemiBold.copyWith(
                                 color: const Color(0xFF204F33),
                                 fontSize: 20,
@@ -70,11 +69,11 @@ class FindByCategoryPage extends GetView<FindByCategoryController> {
                                 Get.bottomSheet(
                                   ListView.builder(
                                     itemCount:
-                                        findByCategoryController.allCat.length,
+                                        findByCategoryController.alCat.length,
                                     itemBuilder:
                                         (BuildContext context, int index) {
-                                      var data = findByCategoryController
-                                          .allCat[index];
+                                      var data =
+                                          findByCategoryController.alCat[index];
                                       return InkWell(
                                         onTap: () {
                                           findByCategoryController.catId =
@@ -97,8 +96,8 @@ class FindByCategoryPage extends GetView<FindByCategoryController> {
                                             horizontalTitleGap:
                                                 getProportionateScreenWidth(25),
                                             leading: CachedNetworkImage(
-                                              imageUrl:
-                                                  Constants.imgUrl + data.image,
+                                              imageUrl: Constants.imgUrl +
+                                                  data.filename,
                                               width:
                                                   getProportionateScreenWidth(
                                                       48),
@@ -163,7 +162,7 @@ class FindByCategoryPage extends GetView<FindByCategoryController> {
                   endIndent: 10,
                   color: AppColors.doveGray.withOpacity(.5),
                 ),
-                findByCategoryController.restaurByCat.isEmpty
+                findByCategoryController.categoryData.isEmpty
                     ? Expanded(
                         child: Center(
                           child: Column(
