@@ -37,7 +37,7 @@ class FindByCategoryPage extends GetView<FindByCategoryController> {
             return Obx(
               () => Column(
                 children: [
-                  findByCategoryController.categoryy.isNotEmpty
+                  findByCategoryController.categoryList.isNotEmpty
                       ? Padding(
                           padding: const EdgeInsets.symmetric(
                               horizontal: 10, vertical: 10),
@@ -47,9 +47,9 @@ class FindByCategoryPage extends GetView<FindByCategoryController> {
                                 borderRadius: BorderRadius.circular(30),
                                 child: CircleAvatar(
                                     backgroundColor: AppColors.white,
-                                    child: Image.network(Constants.imgUrl +
+                                    child: Image.network(
                                         findByCategoryController
-                                            .categoryy[0].filename)
+                                            .categoryList[0].filename)
 
                                     // SvgPicture.asset(AppIcons.heart),
 
@@ -57,7 +57,7 @@ class FindByCategoryPage extends GetView<FindByCategoryController> {
                               ),
                               const SizedBox(width: 10),
                               Text(
-                                findByCategoryController.categoryy[0].name,
+                                findByCategoryController.categoryList[0].name,
                                 style: beVietnamProSemiBold.copyWith(
                                   color: const Color(0xFF204F33),
                                   fontSize: 20,
@@ -70,12 +70,12 @@ class FindByCategoryPage extends GetView<FindByCategoryController> {
                                 onTap: () {
                                   Get.bottomSheet(
                                     ListView.builder(
-                                      itemCount:
-                                          findByCategoryController.alCat.length,
+                                      itemCount: findByCategoryController
+                                          .allCategories.length,
                                       itemBuilder:
                                           (BuildContext context, int index) {
                                         var data = findByCategoryController
-                                            .alCat[index];
+                                            .allCategories[index];
                                         return InkWell(
                                           onTap: () {
                                             findByCategoryController.catId =
@@ -99,8 +99,7 @@ class FindByCategoryPage extends GetView<FindByCategoryController> {
                                                   getProportionateScreenWidth(
                                                       25),
                                               leading: CachedNetworkImage(
-                                                imageUrl: Constants.imgUrl +
-                                                    data.filename,
+                                                imageUrl: data.filename,
                                                 width:
                                                     getProportionateScreenWidth(
                                                         48),
@@ -129,12 +128,6 @@ class FindByCategoryPage extends GetView<FindByCategoryController> {
                                                       child: Icon(Icons.error));
                                                 },
                                               ),
-                                              // leading: CircleAvatar(
-                                              //   radius: 25,
-                                              //   backgroundImage: NetworkImage(
-                                              //       Constants.imgUrl +
-                                              //           data.image),
-                                              // ),
                                               title: Text(data.name),
                                             ),
                                           ),
@@ -251,96 +244,39 @@ class FindByCategoryPage extends GetView<FindByCategoryController> {
                       imageUrl: Constants.imgUrl +
                           controller.categoryData[index].filename),
                 ),
-                // ClipRRect(
-                //   borderRadius: BorderRadius.circular(8.0),
-                //   child: CachedNetworkImage(
-                //       height: 220,
-                //       fit: BoxFit.cover,
-                //       imageUrl:  AssetImage(AppImages.dummyFood)),
-                // ),
                 SizedBox(height: getProportionateScreenHeight(10)),
                 GestureDetector(
                   onTap: () {
                     printInfo(info: "Hello");
-                    // Get.toNamed(Routes.MERCHANTS, arguments: item.id);
                   },
                   child: Padding(
                     padding: EdgeInsets.symmetric(
-                        horizontal: getProportionateScreenWidth(8)),
+                      horizontal: getProportionateScreenWidth(8),
+                    ),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text(
+                        Expanded(
+                          child: Text(
                             controller.categoryData[index].name ??
                                 '-'.capitalize.toString(),
                             style: beVietnamProaBold.copyWith(
-                                color: AppColors.appTheme, fontSize: 16)),
+                              color: AppColors.appTheme,
+                              fontSize: 16,
+                            ),
+                            overflow: TextOverflow.ellipsis,
+                            maxLines: 1,
+                          ),
+                        ),
                         CircleAvatar(
                           radius: 15,
-                          backgroundImage: NetworkImage(
-                              controller.categoryData[index].filename!),
-                        )
+                          backgroundImage: NetworkImage(Constants.imgUrl +
+                              controller.categoryData[index].filename),
+                        ),
                       ],
                     ),
                   ),
                 ),
-                // Padding(
-                //   padding: EdgeInsets.symmetric(
-                //       horizontal: getProportionateScreenWidth(5),
-                //       vertical: 5.0),
-                //   child: Row(
-                //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                //     children: [
-                //       Expanded(
-                //         child: Row(
-                //           children: [
-                //             const Iconify(
-                //               Carbon.delivery_parcel,
-                //               color: Color(0xFF9D9D9D),
-                //               size: 16,
-                //             ),
-                //             const SizedBox(width: 3),
-                //             Expanded(
-                //               child: Text(
-                //                 "free delivery".capitalize!,
-                //                 maxLines: 1,
-                //                 overflow: TextOverflow.ellipsis,
-                //                 style: urbanistSemiBold.copyWith(
-                //                     color: const Color(0xFF9D9D9D),
-                //                     fontSize: getProportionalFontSize(11)),
-                //               ),
-                //             ),
-                //           ],
-                //         ),
-                //       ),
-                //       SizedBox(width: getProportionateScreenWidth(5)),
-                //       Expanded(
-                //         child: Row(
-                //           children: [
-                //             const Iconify(
-                //               Ic.round_access_time,
-                //               color: Color(0xFF9D9D9D),
-                //               size: 16,
-                //             ),
-                //             const SizedBox(
-                //               width: 3,
-                //             ),
-                //             Expanded(
-                //               child: Text(
-                //                 "10-15 mins",
-                //                 maxLines: 1,
-                //                 overflow: TextOverflow.ellipsis,
-                //                 style: urbanistSemiBold.copyWith(
-                //                     color: const Color(0xFF9D9D9D),
-                //                     fontSize: getProportionalFontSize(11)),
-                //               ),
-                //             ),
-                //           ],
-                //         ),
-                //       ),
-                //     ],
-                //   ),
-                // ),
                 SizedBox(height: getProportionateScreenHeight(10)),
                 Padding(
                   padding: EdgeInsets.symmetric(
@@ -381,7 +317,8 @@ class FindByCategoryPage extends GetView<FindByCategoryController> {
                                   ),
                                   Flexible(
                                     child: Text(
-                                      item.distance.toString() + " Miles",
+                                      item.distance.round().toString() +
+                                          " Miles",
                                       maxLines: 1,
                                       overflow: TextOverflow.ellipsis,
                                       style: urbanistSemiBold.copyWith(
@@ -395,29 +332,6 @@ class FindByCategoryPage extends GetView<FindByCategoryController> {
                           ],
                         ),
                       ),
-                      // SizedBox(width: getProportionateScreenWidth(5)),
-                      // Expanded(
-                      //   child: Row(
-                      //     children: [
-                      //       const Iconify(
-                      //         Uil.shopping_basket,
-                      //         color: Color(0xFF9D9D9D),
-                      //         size: 16,
-                      //       ),
-                      //       const SizedBox(
-                      //         width: 3,
-                      //       ),
-                      //       Text(
-                      //         "{250 items}",
-                      //         maxLines: 1,
-                      //         overflow: TextOverflow.ellipsis,
-                      //         style: urbanistSemiBold.copyWith(
-                      //             color: const Color(0xFF9D9D9D),
-                      //             fontSize: getProportionalFontSize(11)),
-                      //       ),
-                      //     ],
-                      //   ),
-                      // ),
                     ],
                   ),
                 ),
@@ -439,7 +353,7 @@ class FindByCategoryPage extends GetView<FindByCategoryController> {
                         padding: const EdgeInsets.all(8.0),
                         child: Row(children: [
                           Text(
-                            "0",
+                            "5",
                             style: urbanistBold.copyWith(
                                 fontSize: 14, color: AppColors.appTheme),
                           ),
@@ -447,7 +361,7 @@ class FindByCategoryPage extends GetView<FindByCategoryController> {
                             width: 5,
                           ),
                           Image.asset(AppImages.star),
-                          Text('( ?? 0})'),
+                          Text('(0)'),
                         ]),
                       ),
                     ),
@@ -498,41 +412,6 @@ class FindByCategoryPage extends GetView<FindByCategoryController> {
                   ],
                 ),
               )
-              // GestureDetector(
-              //   onTap: () {},
-              //   child: Padding(
-              //     padding: const EdgeInsets.only(left: 8.0),
-              //     child: Row(
-              //       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              //       children: [
-              //         Container(
-              //           height: 25,
-              //           width: 74,
-              //           decoration: BoxDecoration(
-              //               color: AppColors.white,
-              //               border: Border.all(
-              //                 color: AppColors.white,
-              //               ),
-              //               borderRadius:
-              //                   const BorderRadius.all(Radius.circular(20))),
-              //           child: Row(
-              //               mainAxisAlignment: MainAxisAlignment.center,
-              //               children: [
-              //                 const Text('4.5'),
-              //                 Image.asset(AppImages.star),
-              //                 const Text('(25)'),
-              //               ]),
-              //         ),
-              //         IconButton(
-              //           icon: CircleAvatar(
-              //               backgroundColor: AppColors.white,
-              //               child: SvgPicture.asset(AppIcons.heart)),
-              //           onPressed: () {},
-              //         )
-              //       ],
-              //     ),
-              //   ),
-              // )
             ],
           ),
         ),
