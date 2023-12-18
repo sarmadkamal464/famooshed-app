@@ -17,11 +17,15 @@ import '../../data/models/get_delivery_type_response.dart';
 import '../cart_module/cart_controller.dart';
 import '../order_sucess_module/order_sucess_controller.dart';
 import '../payment_methods_module/payment_methods_controller.dart';
+import 'package:flutter_stripe/flutter_stripe.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
 /// GetX Template Generator - fb.com/htngu.99
 ///
 
 class CheckoutController extends GetxController {
+  Map<String, dynamic>? paymentIntent;
   @override
   void onReady() {
     // getAddress();
@@ -617,4 +621,182 @@ class CheckoutController extends GetxController {
   //     retryFunction: resetBasket,
   //   );
   // }
+  Future<void> makePayment(String payable) async {
+    try {
+      int amountInCents = (double.parse(payable) * 100).round();
+      var customer =
+          await createOrRetrieveCustomer('john12345@gmail.com', 'john');
+      // print('customer $customer');
+      // var paymentMethodId = await attachCardToCustomer(
+      //     customer['id'], 'card_token_or_payment_method_id');
+
+      // Step 3: Create PaymentIntent with the attached PaymentMethod
+      var paymentIntent = await createPaymentIntentWithPaymentMethod(
+          amountInCents.toString(), 'GBP', customer['id']);
+
+      var gpay = PaymentSheetGooglePay(
+          merchantCountryCode: "GB",
+          currencyCode: "GBP",
+          testEnv: true,
+          label: 'famooshed Pay',
+          amount: '100');
+
+      //STEP 2: Initialize Payment Sheet
+      await Stripe.instance
+          .initPaymentSheet(
+              paymentSheetParameters: SetupPaymentSheetParameters(
+            billingDetails: const BillingDetails(
+                name: 'John',
+                email: 'john@gmail.com',
+                phone: '+920000000',
+                address: Address(
+                    city: 'Bordon',
+                    country: 'UK',
+                    line1: '25 Essex Cl',
+                    line2: 'GU35 OTZ',
+                    postalCode: '4567',
+                    state: 'state')),
+            paymentIntentClientSecret:
+                paymentIntent!['client_secret'], //Gotten from payment intent
+            style: ThemeMode.light,
+            merchantDisplayName: 'Famooshed',
+            googlePay: gpay,
+            applePay: const PaymentSheetApplePay(
+              buttonType: PlatformButtonType.buy,
+              merchantCountryCode: '+92',
+            ),
+            // customerEphemeralKeySecret: paymentIntent?['ephemeralKey'],
+            customerId: customer['id'],
+          ))
+          .then((value) {});
+
+      //STEP 3: Display Payment sheet
+      displayPaymentSheet();
+    } catch (err) {
+      print(err);
+    }
+  }
+
+  displayPaymentSheet() async {
+    try {
+      await Stripe.instance.presentPaymentSheet().then((value) {
+        print("Payment Successfully");
+        Get.delete<CheckoutController>();
+        Get.toNamed(Routes.ORDER_SUCESS);
+        Get.delete<OrderSucessController>();
+        placeOrder();
+      });
+    } catch (e) {
+      print('$e');
+    }
+  }
+
+  Future<Map<String, dynamic>> createOrRetrieveCustomer(
+      String email, String name) async {
+    try {
+      // Check if the customer already exists
+      var existingCustomers = await listCustomers(email);
+      if (existingCustomers.isNotEmpty) {
+        return existingCustomers.first;
+      }
+
+      // If the customer doesn't exist, create a new one
+      return await createCustomer(email, name);
+    } catch (err) {
+      throw Exception(err.toString());
+    }
+  }
+
+  Future<List<Map<String, dynamic>>> listCustomers(String email) async {
+    try {
+      var response = await http.get(
+        Uri.parse('https://api.stripe.com/v1/customers'),
+        headers: {
+          'Authorization':
+              'Bearer sk_test_51OMVstJ2x5Ph6J2TdbqqCEANmQwmQYgjy1VQtB4HHYNexkGAGZBBk1hEX9HtzTmLr8VJ6zFq7r629PTi1RZdMMsc00IvUld2Bc',
+        },
+      );
+
+      var customers = json.decode(response.body)['data'];
+      var filteredCustomers =
+          customers.where((customer) => customer['email'] == email).toList();
+      return filteredCustomers.cast<Map<String, dynamic>>();
+    } catch (err) {
+      throw Exception(err.toString());
+    }
+  }
+
+  Future<String> attachCardToCustomer(
+      String customerId, String cardTokenOrPaymentMethodId) async {
+    try {
+      Map<String, dynamic> body = {
+        'customer': customerId,
+        'source': cardTokenOrPaymentMethodId,
+      };
+
+      var response = await http.post(
+        Uri.parse('https://api.stripe.com/v1/payment_methods/attach'),
+        headers: {
+          'Authorization':
+              'Bearer sk_test_51OMVstJ2x5Ph6J2TdbqqCEANmQwmQYgjy1VQtB4HHYNexkGAGZBBk1hEX9HtzTmLr8VJ6zFq7r629PTi1RZdMMsc00IvUld2Bc',
+          'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: body,
+      );
+
+      var paymentMethodId = json.decode(response.body)['id'];
+      return paymentMethodId;
+    } catch (err) {
+      throw Exception(err.toString());
+    }
+  }
+
+  Future<Map<String, dynamic>?> createPaymentIntentWithPaymentMethod(
+      String amount, String currency, String customer) async {
+    try {
+      Map<String, dynamic> body = {
+        'amount': amount,
+        'currency': currency,
+        'customer': customer,
+        'description': 'User Do its Payment',
+      };
+
+      var response = await http.post(
+        Uri.parse('https://api.stripe.com/v1/payment_intents'),
+        headers: {
+          'Authorization':
+              'Bearer sk_test_51OMVstJ2x5Ph6J2TdbqqCEANmQwmQYgjy1VQtB4HHYNexkGAGZBBk1hEX9HtzTmLr8VJ6zFq7r629PTi1RZdMMsc00IvUld2Bc',
+          'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: body,
+      );
+      var paymentIntent = json.decode(response.body) as Map<String, dynamic>;
+      return paymentIntent;
+    } catch (err) {
+      throw Exception(err.toString());
+    }
+  }
+
+  Future<Map<String, dynamic>> createCustomer(String email, String name) async {
+    try {
+      Map<String, dynamic> body = {
+        'email': email,
+        'name': name,
+      };
+
+      var response = await http.post(
+        Uri.parse('https://api.stripe.com/v1/customers'),
+        headers: {
+          'Authorization':
+              'Bearer sk_test_51OMVstJ2x5Ph6J2TdbqqCEANmQwmQYgjy1VQtB4HHYNexkGAGZBBk1hEX9HtzTmLr8VJ6zFq7r629PTi1RZdMMsc00IvUld2Bc',
+          'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: body,
+      );
+
+      return json.decode(response.body.toString());
+    } catch (err) {
+      throw Exception(err.toString());
+    }
+  }
 }

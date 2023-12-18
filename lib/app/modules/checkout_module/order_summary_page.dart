@@ -1,5 +1,7 @@
 // ignore_for_file: must_be_immutable
 
+import 'dart:convert';
+
 import 'package:famooshed/app/data/models/get_cart_model.dart';
 import 'package:famooshed/app/modules/checkout_module/checkout_controller.dart';
 import 'package:famooshed/app/routes/app_pages.dart';
@@ -12,10 +14,12 @@ import '../../theme/app_text_theme.dart';
 import '../widgets/custom_appbar_widget.dart';
 import '../widgets/custom_default_button.dart';
 import 'checkout_page.dart';
+import 'package:flutter_stripe/flutter_stripe.dart';
+import 'package:http/http.dart' as http;
 
 class OrderSummaryPage extends GetView<CheckoutController> {
   OrderSummaryPage({super.key});
-
+  Map<String, dynamic>? paymentIntent;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -36,8 +40,12 @@ class OrderSummaryPage extends GetView<CheckoutController> {
             DefaultButton(
               text: "Place Order",
               width: Get.width * .9,
-              onTap: () {
-                Get.toNamed(Routes.PAYMENT_PAGE);
+              // onTap: () {
+              //   Get.toNamed(Routes.PAYMENT_PAGE);
+              // },
+              onTap: () async {
+                await controller
+                    .makePayment(controller.cartResponse.data!.payable ?? '');
               },
               buttonColor: AppColors.appTheme,
               textColor: AppColors.white,
@@ -600,4 +608,70 @@ class OrderSummaryPage extends GetView<CheckoutController> {
       ],
     );
   }
+
+  // Future<void> makePayment(String payable) async {
+  //   try {
+  //     int amountInCents = (double.parse(payable) * 100).round();
+  //     paymentIntent =
+  //         await createPaymentIntent(amountInCents.toString(), 'GBP');
+
+  //     var gpay = PaymentSheetGooglePay(
+  //         merchantCountryCode: "GB",
+  //         currencyCode: "GBP",
+  //         testEnv: true,
+  //         label: 'famooshed Pay',
+  //         amount: '100');
+  //     //STEP 2: Initialize Payment Sheet
+  //     await Stripe.instance
+  //         .initPaymentSheet(
+  //             paymentSheetParameters: SetupPaymentSheetParameters(
+  //                 paymentIntentClientSecret: paymentIntent![
+  //                     'client_secret'], //Gotten from payment intent
+  //                 style: ThemeMode.light,
+  //                 merchantDisplayName: 'Famooshed',
+  //                 googlePay: gpay,
+  //                 applePay: const PaymentSheetApplePay(
+  //                   buttonType: PlatformButtonType.buy,
+  //                   merchantCountryCode: 'GB',
+  //                 )))
+  //         .then((value) {});
+
+  //     //STEP 3: Display Payment sheet
+  //     displayPaymentSheet();
+  //   } catch (err) {
+  //     print(err);
+  //   }
+  // }
+
+  // displayPaymentSheet() async {
+  //   try {
+  //     await Stripe.instance.presentPaymentSheet().then((value) {
+  //       print("Payment Successfully");
+  //     });
+  //   } catch (e) {
+  //     print('$e');
+  //   }
+  // }
+
+  // createPaymentIntent(String amount, String currency) async {
+  //   try {
+  //     Map<String, dynamic> body = {
+  //       'amount': amount,
+  //       'currency': currency,
+  //     };
+
+  //     var response = await http.post(
+  //       Uri.parse('https://api.stripe.com/v1/payment_intents'),
+  //       headers: {
+  //         'Authorization':
+  //             'Bearer sk_test_51OMVstJ2x5Ph6J2TdbqqCEANmQwmQYgjy1VQtB4HHYNexkGAGZBBk1hEX9HtzTmLr8VJ6zFq7r629PTi1RZdMMsc00IvUld2Bc',
+  //         'Content-Type': 'application/x-www-form-urlencoded'
+  //       },
+  //       body: body,
+  //     );
+  //     return json.decode(response.body);
+  //   } catch (err) {
+  //     throw Exception(err.toString());
+  //   }
+  // }
 }

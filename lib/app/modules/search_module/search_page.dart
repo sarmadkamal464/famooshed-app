@@ -156,7 +156,7 @@ class SearchPage extends GetView<SearchFoodController> {
             children: [
               Container(
                 width: getProportionateScreenWidth(160),
-                height: getProportionateScreenHeight(150),
+                height: getProportionateScreenHeight(200),
                 decoration: ShapeDecoration(
                   image: DecorationImage(
                     image: NetworkImage(
@@ -167,23 +167,19 @@ class SearchPage extends GetView<SearchFoodController> {
                       borderRadius: BorderRadius.circular(8)),
                 ),
               ),
-              Text(
-                controller.foodList[index].name,
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-                style: beVietnamProSemiBold.copyWith(
-                  color: AppColors.appTheme,
-                  fontSize: getProportionalFontSize(16),
-                ),
-              ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text(
-                    'Remaining (200)',
-                    style: urbanistSemiBold.copyWith(
-                        color: HexColor('#9D9D9D'),
-                        fontSize: getProportionalFontSize(13)),
+                  Expanded(
+                    child: Text(
+                      controller.foodList[index].name,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: beVietnamProSemiBold.copyWith(
+                        color: AppColors.appTheme,
+                        fontSize: getProportionalFontSize(16),
+                      ),
+                    ),
                   ),
                   Row(
                     children: [
@@ -287,9 +283,6 @@ class SearchPage extends GetView<SearchFoodController> {
                         controller.goToDetailPage(index);
                         // controller.addToCart(index);
                       })),
-              const SizedBox(
-                height: 10,
-              )
             ],
           ),
         ),
