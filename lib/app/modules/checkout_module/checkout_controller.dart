@@ -1,14 +1,19 @@
+import 'dart:developer';
+
 import 'package:dio/dio.dart' as d;
 import 'package:famooshed/app/common/util/loading_dialog.dart';
 import 'package:famooshed/app/common/values/app_urls.dart';
 import 'package:famooshed/app/data/api_helper.dart';
 import 'package:famooshed/app/data/models/card_model.dart';
 import 'package:famooshed/app/data/models/get_address_new_response.dart';
+import 'package:famooshed/app/data/models/get_profile_response.dart';
 import 'package:famooshed/app/modules/checkout_module/checkout_page.dart';
+import 'package:famooshed/app/modules/dashboard_module/dashboard_controller.dart';
 import 'package:famooshed/app/routes/app_pages.dart';
 import 'package:famooshed/app/utils/dprint.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../common/constants.dart';
 import '../../common/storage/storage.dart';
@@ -26,6 +31,7 @@ import 'dart:convert';
 
 class CheckoutController extends GetxController {
   Map<String, dynamic>? paymentIntent;
+  GetProfileResponse? getProfileResponse;
   @override
   void onReady() {
     // getAddress();
@@ -33,6 +39,7 @@ class CheckoutController extends GetxController {
     getDeliveryType();
 
     getAddressNew();
+    getProfile();
     super.onReady();
   }
 
@@ -52,7 +59,8 @@ class CheckoutController extends GetxController {
   bool isOtherSelected = false;
   String selectColorId = "Black";
   String selectedVehicleName = "";
-
+  String securityKey =
+      "sk_test_51IJi9OKuIF9Xn1SP7aTTJsJE5ZbFna6XgNfgw0gOPg4ZGjYybifieT0sQ6GkytPrXi7c87heYdB33An0ICqZyZc900xhpwrICU";
   AddressEnum? addressValue = AddressEnum.home;
   PaymentEnum? payment = PaymentEnum.card;
 
@@ -161,7 +169,8 @@ class CheckoutController extends GetxController {
   RxBool onlyFamooshed = RxBool(false);
   RxBool homeDelivery = RxBool(false);
   RxBool pickupFromMarket = RxBool(false);
-
+  RxBool isLoading = true.obs;
+  final ApiHelper _apiHelper = ApiHelper.to;
   Rx<GetDeliveryTypeResponse> deliveryOptions = Rx(GetDeliveryTypeResponse());
   RxDouble deliveryFee = RxDouble(0);
 
@@ -621,15 +630,35 @@ class CheckoutController extends GetxController {
   //     retryFunction: resetBasket,
   //   );
   // }
-  Future<void> makePayment(String payable) async {
+  getProfile() async {
+    var userId = await Storage.getValue(Constants.userId);
+
+    _apiHelper.postApiCall("${AppUrl.getProfile}", {"id": userId}).futureValue(
+      (value) {
+        try {
+          getProfileResponse = GetProfileResponse.fromJson(value);
+          isLoading.value = false;
+
+          update();
+        } catch (e, trace) {
+          log(e.toString(), stackTrace: trace);
+        }
+      },
+      retryFunction: getProfile,
+    );
+  }
+
+  Future<void> makePayment(
+    String payable,
+    String email,
+    String name,
+  ) async {
     try {
       int amountInCents = (double.parse(payable) * 100).round();
-      var customer =
-          await createOrRetrieveCustomer('john12345@gmail.com', 'john');
-      // print('customer $customer');
-      // var paymentMethodId = await attachCardToCustomer(
-      //     customer['id'], 'card_token_or_payment_method_id');
-
+      var customer = await createOrRetrieveCustomer(
+        email,
+        name,
+      );
       // Step 3: Create PaymentIntent with the attached PaymentMethod
       var paymentIntent = await createPaymentIntentWithPaymentMethod(
           amountInCents.toString(), 'GBP', customer['id']);
@@ -680,7 +709,11 @@ class CheckoutController extends GetxController {
   displayPaymentSheet() async {
     try {
       await Stripe.instance.presentPaymentSheet().then((value) {
+        DashboardController dashboardController =
+            Get.find<DashboardController>();
         print("Payment Successfully");
+        Get.delete<CartController>();
+        dashboardController.count.value.toString() == 0;
         Get.delete<CheckoutController>();
         Get.toNamed(Routes.ORDER_SUCESS);
         Get.delete<OrderSucessController>();
@@ -692,7 +725,9 @@ class CheckoutController extends GetxController {
   }
 
   Future<Map<String, dynamic>> createOrRetrieveCustomer(
-      String email, String name) async {
+    String email,
+    String name,
+  ) async {
     try {
       // Check if the customer already exists
       var existingCustomers = await listCustomers(email);
@@ -712,8 +747,7 @@ class CheckoutController extends GetxController {
       var response = await http.get(
         Uri.parse('https://api.stripe.com/v1/customers'),
         headers: {
-          'Authorization':
-              'Bearer sk_test_51OMVstJ2x5Ph6J2TdbqqCEANmQwmQYgjy1VQtB4HHYNexkGAGZBBk1hEX9HtzTmLr8VJ6zFq7r629PTi1RZdMMsc00IvUld2Bc',
+          'Authorization': 'Bearer $securityKey',
         },
       );
 
@@ -737,8 +771,7 @@ class CheckoutController extends GetxController {
       var response = await http.post(
         Uri.parse('https://api.stripe.com/v1/payment_methods/attach'),
         headers: {
-          'Authorization':
-              'Bearer sk_test_51OMVstJ2x5Ph6J2TdbqqCEANmQwmQYgjy1VQtB4HHYNexkGAGZBBk1hEX9HtzTmLr8VJ6zFq7r629PTi1RZdMMsc00IvUld2Bc',
+          'Authorization': 'Bearer $securityKey',
           'Content-Type': 'application/x-www-form-urlencoded',
         },
         body: body,
@@ -764,8 +797,7 @@ class CheckoutController extends GetxController {
       var response = await http.post(
         Uri.parse('https://api.stripe.com/v1/payment_intents'),
         headers: {
-          'Authorization':
-              'Bearer sk_test_51OMVstJ2x5Ph6J2TdbqqCEANmQwmQYgjy1VQtB4HHYNexkGAGZBBk1hEX9HtzTmLr8VJ6zFq7r629PTi1RZdMMsc00IvUld2Bc',
+          'Authorization': 'Bearer $securityKey',
           'Content-Type': 'application/x-www-form-urlencoded',
         },
         body: body,
@@ -787,8 +819,7 @@ class CheckoutController extends GetxController {
       var response = await http.post(
         Uri.parse('https://api.stripe.com/v1/customers'),
         headers: {
-          'Authorization':
-              'Bearer sk_test_51OMVstJ2x5Ph6J2TdbqqCEANmQwmQYgjy1VQtB4HHYNexkGAGZBBk1hEX9HtzTmLr8VJ6zFq7r629PTi1RZdMMsc00IvUld2Bc',
+          'Authorization': 'Bearer $securityKey',
           'Content-Type': 'application/x-www-form-urlencoded',
         },
         body: body,

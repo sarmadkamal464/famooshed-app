@@ -29,10 +29,8 @@ Future<void> main() async {
     //   // _firebaseMessagingBackgroundHandler(initialMessage);
     //   print(initialMessage.data);
     // }
-    // Stripe.publishableKey =
-    //     "pk_test_51IJi9OKuIF9Xn1SPpxaex4cmWtVeQNf4Ui3jponde3329EmiQLVwKO1Ag3tdpO6nlDxBjzFdhvlDLAvfaJxlngGC00CXr3HRUG";
     Stripe.publishableKey =
-        "pk_test_51OMVstJ2x5Ph6J2TvIfsGwTQdKWwMs07ea6aIECqRyBpvbyOKzOufomp5FX0xqwh2njC4e92jmzAvIC14GybvpJd00gkCLL0ge";
+        "pk_test_51IJi9OKuIF9Xn1SPpxaex4cmWtVeQNf4Ui3jponde3329EmiQLVwKO1Ag3tdpO6nlDxBjzFdhvlDLAvfaJxlngGC00CXr3HRUG";
     Stripe.merchantIdentifier = 'merchant.flutter.stripe.test';
     Stripe.urlScheme = 'flutterstripe';
     await Stripe.instance.applySettings();

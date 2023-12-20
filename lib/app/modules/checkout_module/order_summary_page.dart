@@ -44,8 +44,11 @@ class OrderSummaryPage extends GetView<CheckoutController> {
               //   Get.toNamed(Routes.PAYMENT_PAGE);
               // },
               onTap: () async {
-                await controller
-                    .makePayment(controller.cartResponse.data!.payable ?? '');
+                await controller.makePayment(
+                  controller.cartResponse.data!.payable ?? '',
+                  controller.getProfileResponse!.user.email,
+                  controller.getProfileResponse!.user.name,
+                );
               },
               buttonColor: AppColors.appTheme,
               textColor: AppColors.white,

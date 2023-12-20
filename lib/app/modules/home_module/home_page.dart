@@ -132,25 +132,25 @@ class HomePage extends GetView<HomeController> {
                           : SizedBox(),
                       controller.newToFamooshed.isNotEmpty
                           ? SizedBox(
-                              height: getProportionateScreenHeight(340),
+                              height: getProportionateScreenHeight(280),
                               child: newToFamooshed(),
                             )
                           : SizedBox(),
                       controller.offerNearYou.isNotEmpty
                           ? SizedBox(
-                              height: getProportionateScreenHeight(340),
+                              height: getProportionateScreenHeight(300),
                               child: offerNearYou(),
                             )
                           : SizedBox(),
                       controller.spotlight.isNotEmpty
                           ? SizedBox(
-                              height: getProportionateScreenHeight(340),
+                              height: getProportionateScreenHeight(295),
                               child: mostFavoriteMarkets(),
                             )
                           : SizedBox(),
                       controller.highestRatedMarkets.isNotEmpty
                           ? SizedBox(
-                              height: getProportionateScreenHeight(340),
+                              height: getProportionateScreenHeight(300),
                               child: highestRatedMarkets(),
                             )
                           : SizedBox(),
@@ -491,9 +491,9 @@ class HomePage extends GetView<HomeController> {
     return Card(
       color: AppColors.white,
       child: SizedBox(
-        width: Get.width * .65,
+        width: Get.width * .40,
         child: Padding(
-          padding: const EdgeInsets.all(8.0),
+          padding: const EdgeInsets.all(6.0),
           child: Stack(
             children: [
               GestureDetector(
@@ -505,7 +505,7 @@ class HomePage extends GetView<HomeController> {
                     ClipRRect(
                       borderRadius: BorderRadius.circular(8.0),
                       child: CachedNetworkImage(
-                          height: getProportionateScreenHeight(190),
+                          height: getProportionateScreenHeight(140),
                           fit: BoxFit.cover,
                           imageUrl: Constants.imgUrl + item.image!),
                     ),
@@ -514,7 +514,7 @@ class HomePage extends GetView<HomeController> {
                     ),
                     Padding(
                       padding: EdgeInsets.symmetric(
-                        horizontal: getProportionateScreenWidth(8),
+                        horizontal: getProportionateScreenWidth(1),
                       ),
                       child: Column(
                         children: [
@@ -607,7 +607,7 @@ class HomePage extends GetView<HomeController> {
                                   ],
                                 ),
                               ),
-                              const SizedBox(width: 8),
+                              // const SizedBox(width: 8),
                               Expanded(
                                 child: Row(
                                   children: [
@@ -641,7 +641,7 @@ class HomePage extends GetView<HomeController> {
                 ),
               ),
               Padding(
-                padding: const EdgeInsets.all(8.0),
+                padding: const EdgeInsets.all(2.0),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
