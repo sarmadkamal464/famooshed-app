@@ -87,7 +87,7 @@ class Food {
   String restaurantMobilePhone;
   String fee;
   int percent;
-  int merchantCommission;
+  dynamic merchantCommission;
   List<dynamic> merchantstripe;
   List<dynamic> nutritionsdata;
   List<dynamic> extrasdata;
@@ -293,7 +293,7 @@ class Restaurant {
   int logoId;
   String desc;
   String fee;
-  int merchantCommission;
+  dynamic merchantCommission;
   int percent;
   String bestSeller;
   String facebook;

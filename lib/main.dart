@@ -31,6 +31,8 @@ Future<void> main() async {
     // }
     Stripe.publishableKey =
         "pk_test_51IJi9OKuIF9Xn1SPpxaex4cmWtVeQNf4Ui3jponde3329EmiQLVwKO1Ag3tdpO6nlDxBjzFdhvlDLAvfaJxlngGC00CXr3HRUG";
+    Stripe.merchantIdentifier = 'merchant.flutter.stripe.test';
+    Stripe.urlScheme = 'flutterstripe';
     await Stripe.instance.applySettings();
     runApp(const MyApp());
   });

@@ -71,7 +71,7 @@ class MapPage extends GetView<DashboardController> {
                           decoration: InputDecoration(
                             contentPadding: EdgeInsets.symmetric(
                                 horizontal: getProportionateScreenWidth(20)),
-                            hintText: "Search here",
+                            hintText: "Search Postcode",
                             fillColor: Colors.white,
                             enabled: true,
                             filled: true,

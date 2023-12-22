@@ -251,17 +251,31 @@ class CartPage extends GetView<CartController> {
             style: urbanistSemiBold.copyWith(
                 fontSize: 14, color: AppColors.greyText),
           ),
-          Text(
-            "£${product.discountprice}",
-            style: urbanistSemiBold.copyWith(
-                fontSize: 14, color: AppColors.greyText),
-          ),
+          product.discountprice != null && product.discountprice! == 0
+              ? Text(
+                  "£${product.discountprice}",
+                  style: urbanistSemiBold.copyWith(
+                    fontSize: 14,
+                    color: AppColors.greyText,
+                  ),
+                )
+              : Container(), // or Text('') if you prefer an empty text widget
+
           Text(
             " £${product.unitPrice}",
             style: urbanistSemiBold.copyWith(
-                fontSize: 13,
-                color: AppColors.greyText.withOpacity(.5),
-                decoration: TextDecoration.lineThrough),
+              fontSize: 13,
+              color: AppColors.greyText.withOpacity(
+                product.discountprice != null && product.discountprice! == 0
+                    ? 0.5 // Apply line-through if discount price is available
+                    : 1.0, // No line-through if discount price is not available
+              ),
+              decoration: product.discountprice != null &&
+                      product.discountprice! == 0
+                  ? TextDecoration
+                      .lineThrough // Apply line-through if discount price is available
+                  : null, // No decoration if discount price is not available
+            ),
           ),
         ],
       ),

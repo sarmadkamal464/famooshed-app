@@ -42,7 +42,7 @@ class GetFoodDetailsResponse {
   String restaurantMobilePhone;
   String fee;
   int percent;
-  int merchantCommission;
+  dynamic merchantCommission;
   List<dynamic> merchantstripe;
   List<dynamic> nutritionsdata;
   List<dynamic> extrasdata;
@@ -214,7 +214,7 @@ class Food {
   String restaurantMobilePhone;
   String fee;
   int percent;
-  int merchantCommission;
+  dynamic merchantCommission;
   List<dynamic> merchantstripe;
   List<dynamic> nutritionsdata;
   List<dynamic> extrasdata;

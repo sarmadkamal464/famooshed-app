@@ -16,6 +16,7 @@ mixin ApiHelper implements GetConnect {
   Future<Response> addBasket(url, body);
   Future<Response> getBasket(url, body);
   Future<Response> getRestaurantsByCat(url);
+  Future<Response> getRestaurantsByCatNew(url);
   Future<Response> saveAddress(url, body);
 
   Future<d.Response> postApiNew(
