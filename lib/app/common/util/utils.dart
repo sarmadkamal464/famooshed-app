@@ -154,14 +154,33 @@ abstract class Utils {
     );
   }
 
+  // static void loadingDialog() {
+  //   closeDialog();
+
+  //   Get.dialog(
+  //     const Center(
+  //       child: CircularProgressIndicator(),
+  //     ),
+  //     name: 'loadingDialog',
+  //   );
+  // }
+
   static void loadingDialog() {
     closeDialog();
 
     Get.dialog(
-      const Center(
-        child: CircularProgressIndicator(),
+      Center(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const Image(
+              image: AssetImage("assets/images/Loader.gif"),
+              height: 60,
+              width: 80,
+            ),
+          ],
+        ),
       ),
-      name: 'loadingDialog',
     );
   }
 
