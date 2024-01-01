@@ -19,6 +19,7 @@ import 'package:famooshed/app/modules/orders_module/orders_controller.dart';
 import 'package:famooshed/app/modules/widgets/drawer_item.dart';
 import 'package:famooshed/app/routes/app_pages.dart';
 import 'package:famooshed/app/theme/app_text_theme.dart';
+import 'package:famooshed/app/theme/loader.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_google_places_hoc081098/flutter_google_places_hoc081098.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -1289,8 +1290,6 @@ class DashboardController extends GetxController {
               ],
             ),
           )
-        : Center(
-            child: CircularProgressIndicator(),
-          );
+        : const Loader();
   }
 }

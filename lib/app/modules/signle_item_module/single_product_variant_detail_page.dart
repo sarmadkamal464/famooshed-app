@@ -45,7 +45,7 @@ class VariantDetailPage extends GetView<SignleItemController> {
         },
         child: signleItemController.isLoading.value
             ? const Scaffold(
-                body: Center(child: CircularProgressIndicator.adaptive()),
+                body: Center(child: CircularProgressIndicator(color: Colors.transparent)),
               )
             : SafeArea(
                 top: false,

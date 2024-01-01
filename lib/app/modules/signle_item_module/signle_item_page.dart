@@ -37,7 +37,8 @@ class SignleItemPage extends GetView<SignleItemController> {
         builder: (SignleItemController signleItemController) {
       return signleItemController.isLoading.value
           ? const Scaffold(
-              body: Center(child: CircularProgressIndicator.adaptive()),
+              body: Center(
+                  child: CircularProgressIndicator(color: Colors.transparent)),
             )
           : SafeArea(
               top: false,
