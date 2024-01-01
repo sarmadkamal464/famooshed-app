@@ -124,14 +124,12 @@ class HomePage extends GetView<HomeController> {
                           : SizedBox(),
                       byCategory(),
                       spotlightMerchants(),
-                      const SizedBox(height: 20),
                       controller.popularMerchantsMain.isNotEmpty
                           ? SizedBox(
                               height: getProportionateScreenHeight(340),
                               child: popularMerchantsMain(),
                             )
                           : SizedBox(),
-                      const SizedBox(height: 20),
                       controller.newToFamooshed.isNotEmpty
                           ? SizedBox(
                               height: getProportionateScreenHeight(340),

@@ -88,7 +88,7 @@ class SearchPage extends GetView<SearchFoodController> {
           builder: (SearchFoodController searchController) {
             return SingleChildScrollView(
               child: Column(
-                children: [product()],
+                children: [product(context)],
               ),
             );
           },
@@ -116,13 +116,13 @@ class SearchPage extends GetView<SearchFoodController> {
         ));
   }
 
-  product() {
+  product(BuildContext context) {
     return GridView.builder(
         shrinkWrap: true,
         physics: const NeverScrollableScrollPhysics(),
         // scrollDirection: Axis.vertical,
-        gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-            maxCrossAxisExtent: 200,
+        gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
+            maxCrossAxisExtent: MediaQuery.of(context).size.width / 2,
             childAspectRatio: 1.2 / 2,
             crossAxisSpacing: 8,
             mainAxisSpacing: 20),
