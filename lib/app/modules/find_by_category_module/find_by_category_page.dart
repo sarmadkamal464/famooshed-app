@@ -6,6 +6,7 @@ import 'package:famooshed/app/modules/find_by_category_module/find_by_category_c
 import 'package:famooshed/app/modules/widgets/custom_appbar_widget.dart';
 import 'package:famooshed/app/routes/app_pages.dart';
 import 'package:famooshed/app/theme/app_text_theme.dart';
+import 'package:famooshed/app/theme/loader.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
@@ -158,33 +159,44 @@ class FindByCategoryPage extends GetView<FindByCategoryController> {
                     endIndent: 10,
                     color: AppColors.doveGray.withOpacity(.5),
                   ),
-                  findByCategoryController.categoryData.isEmpty
-                      ? Expanded(
-                          child: Center(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                SizedBox(
-                                  child:
-                                      SvgPicture.asset(AppIcons.noItemFoound),
+                  Expanded(
+                    child: Obx(() {
+                      // Check if the data is currently loading
+                      if (findByCategoryController.isLoading == true) {
+                        // Show loading indicator
+                        return const Center(
+                          child: Loader(),
+                        );
+                      } else {
+                        // Check if the category data is empty
+                        return findByCategoryController.categoryData.isEmpty
+                            ? Center(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    SizedBox(
+                                      child: SvgPicture.asset(
+                                          AppIcons.noItemFoound),
+                                    ),
+                                    Text(
+                                      "Nothing Found!",
+                                      style: beVietnamProSemiBold.copyWith(
+                                        color: AppColors.appTheme,
+                                        fontSize: 26,
+                                      ),
+                                    ),
+                                  ],
                                 ),
-                                Text(
-                                  "Nothing Found!",
-                                  style: beVietnamProSemiBold.copyWith(
-                                    color: AppColors.appTheme,
-                                    fontSize: 26,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        )
-                      : Expanded(
-                          child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: popularMerchants(findByCategoryController),
-                        )),
+                              )
+                            : Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child:
+                                    popularMerchants(findByCategoryController),
+                              );
+                      }
+                    }),
+                  )
                 ],
               ),
             );

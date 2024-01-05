@@ -799,15 +799,13 @@ class MerchantsPage extends GetView<MerchantsController> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Expanded(
-                    child: Text(
-                      "£${double.parse(controller.foodList[index].price).toString()}",
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: beVietnamProSemiBold.copyWith(
-                          fontSize: getProportionalFontSize(18),
-                          color: AppColors.appTheme),
-                    ),
+                  Text(
+                    "£${double.parse(controller.foodList[index].price).toString()}",
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: beVietnamProSemiBold.copyWith(
+                        fontSize: getProportionalFontSize(15),
+                        color: AppColors.appTheme),
                   ),
                   DefaultRectButton(
                       buttonColor:

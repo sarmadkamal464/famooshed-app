@@ -81,20 +81,17 @@ class FindByCategoryController extends GetxController {
   }
 
   Future<void> getCategoryDataNew() async {
+    isLoading.value = true;
     DashboardController dashboardController = Get.find<DashboardController>();
     double latitude = dashboardController.lat.value;
     double longitude = dashboardController.lng.value;
     String apiUrl = AppUrl.getRestaurantByCatNew + catId.toString();
-
     // Add latitude and longitude to the URL as query parameters
     apiUrl += '&restlat=$latitude&restlongi=$longitude';
-
     try {
       print('Fetching data from: $apiUrl');
       var response = await dio.get(apiUrl);
-
       print('Response data: ${response.data}');
-
       var responseData = GetRestaurantByCatNewResponse.fromJson(response.data);
       if (allCategories.isNotEmpty) {
         allCategories.clear();
@@ -117,6 +114,8 @@ class FindByCategoryController extends GetxController {
     } catch (e) {
       // Handle any errors that might occur during the API call
       print('Error: $e');
+    } finally {
+      isLoading.value = false;
     }
   }
 
