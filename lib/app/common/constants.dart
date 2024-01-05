@@ -1,6 +1,6 @@
 abstract class Constants {
-  static const String baseUrl = 'https://famooshed.com/admin/public/api/';
-  static const String imgUrl = 'https://famooshed.com/admin/public/images/';
+  static const String baseUrl = 'https://famooshed.co.uk/admin/public/api/';
+  static const String imgUrl = 'https://famooshed.co.uk/admin/public/images/';
 
   static String getMapImage(String label, String lat, String lng) =>
       'https://maps.googleapis.com/maps/api/staticmap?markers=color:0x215034%7Clabel:$label%7C%7C$lat,$lng&zoom=15&size=400x225&key=AIzaSyBlPrKDHq4CtetPgQivrBqsH87JkvLGtQw&scale=4';

@@ -59,7 +59,7 @@ class CheckoutController extends GetxController {
   String selectColorId = "Black";
   String selectedVehicleName = "";
   String securityKey =
-      "sk_test_51IJi9OKuIF9Xn1SP7aTTJsJE5ZbFna6XgNfgw0gOPg4ZGjYybifieT0sQ6GkytPrXi7c87heYdB33An0ICqZyZc900xhpwrICU";
+      "sk_test_51OUb2vHJpwM2a5YZzqRND2sWXkaZ7Bx5lluBlaXQFNWBWh8g6IPZoT4FtnCsNlKzWD8A7d4DGJkvGlenqdJrnxk500cdQOaoJC";
   AddressEnum? addressValue = AddressEnum.home;
   PaymentEnum? payment = PaymentEnum.card;
 
@@ -712,7 +712,7 @@ class CheckoutController extends GetxController {
             Get.find<DashboardController>();
         print("Payment Successfully");
         Get.delete<CartController>();
-        dashboardController.count.value.toString() == 0;
+        dashboardController.count.value.toString() == "0";
         Get.delete<CheckoutController>();
         Get.toNamed(Routes.ORDER_SUCESS);
         Get.delete<OrderSucessController>();
