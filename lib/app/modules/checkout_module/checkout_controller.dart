@@ -1,10 +1,14 @@
+import 'dart:developer';
+
 import 'package:dio/dio.dart' as d;
 import 'package:famooshed/app/common/util/loading_dialog.dart';
 import 'package:famooshed/app/common/values/app_urls.dart';
 import 'package:famooshed/app/data/api_helper.dart';
 import 'package:famooshed/app/data/models/card_model.dart';
 import 'package:famooshed/app/data/models/get_address_new_response.dart';
+import 'package:famooshed/app/data/models/get_profile_response.dart';
 import 'package:famooshed/app/modules/checkout_module/checkout_page.dart';
+import 'package:famooshed/app/modules/dashboard_module/dashboard_controller.dart';
 import 'package:famooshed/app/routes/app_pages.dart';
 import 'package:famooshed/app/utils/dprint.dart';
 import 'package:flutter/material.dart';
@@ -17,11 +21,16 @@ import '../../data/models/get_delivery_type_response.dart';
 import '../cart_module/cart_controller.dart';
 import '../order_sucess_module/order_sucess_controller.dart';
 import '../payment_methods_module/payment_methods_controller.dart';
+import 'package:flutter_stripe/flutter_stripe.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
 /// GetX Template Generator - fb.com/htngu.99
 ///
 
 class CheckoutController extends GetxController {
+  Map<String, dynamic>? paymentIntent;
+  GetProfileResponse? getProfileResponse;
   @override
   void onReady() {
     // getAddress();
@@ -29,6 +38,7 @@ class CheckoutController extends GetxController {
     getDeliveryType();
 
     getAddressNew();
+    getProfile();
     super.onReady();
   }
 
@@ -48,7 +58,8 @@ class CheckoutController extends GetxController {
   bool isOtherSelected = false;
   String selectColorId = "Black";
   String selectedVehicleName = "";
-
+  String securityKey =
+      "sk_test_51OUb2vHJpwM2a5YZzqRND2sWXkaZ7Bx5lluBlaXQFNWBWh8g6IPZoT4FtnCsNlKzWD8A7d4DGJkvGlenqdJrnxk500cdQOaoJC";
   AddressEnum? addressValue = AddressEnum.home;
   PaymentEnum? payment = PaymentEnum.card;
 
@@ -157,7 +168,8 @@ class CheckoutController extends GetxController {
   RxBool onlyFamooshed = RxBool(false);
   RxBool homeDelivery = RxBool(false);
   RxBool pickupFromMarket = RxBool(false);
-
+  RxBool isLoading = true.obs;
+  final ApiHelper _apiHelper = ApiHelper.to;
   Rx<GetDeliveryTypeResponse> deliveryOptions = Rx(GetDeliveryTypeResponse());
   RxDouble deliveryFee = RxDouble(0);
 
@@ -617,4 +629,204 @@ class CheckoutController extends GetxController {
   //     retryFunction: resetBasket,
   //   );
   // }
+  getProfile() async {
+    var userId = await Storage.getValue(Constants.userId);
+
+    _apiHelper.postApiCall("${AppUrl.getProfile}", {"id": userId}).futureValue(
+      (value) {
+        try {
+          getProfileResponse = GetProfileResponse.fromJson(value);
+          isLoading.value = false;
+
+          update();
+        } catch (e, trace) {
+          log(e.toString(), stackTrace: trace);
+        }
+      },
+      retryFunction: getProfile,
+    );
+  }
+
+  Future<void> makePayment(
+    String payable,
+    String email,
+    String name,
+  ) async {
+    try {
+      int amountInCents = (double.parse(payable) * 100).round();
+      var customer = await createOrRetrieveCustomer(
+        email,
+        name,
+      );
+      // Step 3: Create PaymentIntent with the attached PaymentMethod
+      var paymentIntent = await createPaymentIntentWithPaymentMethod(
+          amountInCents.toString(), 'GBP', customer['id']);
+
+      var gpay = PaymentSheetGooglePay(
+          merchantCountryCode: "GB",
+          currencyCode: "GBP",
+          testEnv: true,
+          label: 'famooshed Pay',
+          amount: '100');
+
+      //STEP 2: Initialize Payment Sheet
+      await Stripe.instance
+          .initPaymentSheet(
+              paymentSheetParameters: SetupPaymentSheetParameters(
+            billingDetails: const BillingDetails(
+                name: 'John',
+                email: 'john@gmail.com',
+                phone: '+920000000',
+                address: Address(
+                    city: 'Bordon',
+                    country: 'UK',
+                    line1: '25 Essex Cl',
+                    line2: 'GU35 OTZ',
+                    postalCode: '4567',
+                    state: 'state')),
+            paymentIntentClientSecret:
+                paymentIntent!['client_secret'], //Gotten from payment intent
+            style: ThemeMode.light,
+            merchantDisplayName: 'Famooshed',
+            googlePay: gpay,
+            applePay: const PaymentSheetApplePay(
+              buttonType: PlatformButtonType.buy,
+              merchantCountryCode: '+92',
+            ),
+            // customerEphemeralKeySecret: paymentIntent?['ephemeralKey'],
+            customerId: customer['id'],
+          ))
+          .then((value) {});
+
+      //STEP 3: Display Payment sheet
+      displayPaymentSheet();
+    } catch (err) {
+      print(err);
+    }
+  }
+
+  displayPaymentSheet() async {
+    try {
+      await Stripe.instance.presentPaymentSheet().then((value) {
+        DashboardController dashboardController =
+            Get.find<DashboardController>();
+        print("Payment Successfully");
+        Get.delete<CartController>();
+        dashboardController.count.value.toString() == "0";
+        Get.delete<CheckoutController>();
+        Get.toNamed(Routes.ORDER_SUCESS);
+        Get.delete<OrderSucessController>();
+        placeOrder();
+      });
+    } catch (e) {
+      print('$e');
+    }
+  }
+
+  Future<Map<String, dynamic>> createOrRetrieveCustomer(
+    String email,
+    String name,
+  ) async {
+    try {
+      // Check if the customer already exists
+      var existingCustomers = await listCustomers(email);
+      if (existingCustomers.isNotEmpty) {
+        return existingCustomers.first;
+      }
+
+      // If the customer doesn't exist, create a new one
+      return await createCustomer(email, name);
+    } catch (err) {
+      throw Exception(err.toString());
+    }
+  }
+
+  Future<List<Map<String, dynamic>>> listCustomers(String email) async {
+    try {
+      var response = await http.get(
+        Uri.parse('https://api.stripe.com/v1/customers'),
+        headers: {
+          'Authorization': 'Bearer $securityKey',
+        },
+      );
+
+      var customers = json.decode(response.body)['data'];
+      var filteredCustomers =
+          customers.where((customer) => customer['email'] == email).toList();
+      return filteredCustomers.cast<Map<String, dynamic>>();
+    } catch (err) {
+      throw Exception(err.toString());
+    }
+  }
+
+  Future<String> attachCardToCustomer(
+      String customerId, String cardTokenOrPaymentMethodId) async {
+    try {
+      Map<String, dynamic> body = {
+        'customer': customerId,
+        'source': cardTokenOrPaymentMethodId,
+      };
+
+      var response = await http.post(
+        Uri.parse('https://api.stripe.com/v1/payment_methods/attach'),
+        headers: {
+          'Authorization': 'Bearer $securityKey',
+          'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: body,
+      );
+
+      var paymentMethodId = json.decode(response.body)['id'];
+      return paymentMethodId;
+    } catch (err) {
+      throw Exception(err.toString());
+    }
+  }
+
+  Future<Map<String, dynamic>?> createPaymentIntentWithPaymentMethod(
+      String amount, String currency, String customer) async {
+    try {
+      Map<String, dynamic> body = {
+        'amount': amount,
+        'currency': currency,
+        'customer': customer,
+        'description': 'User Do its Payment',
+      };
+
+      var response = await http.post(
+        Uri.parse('https://api.stripe.com/v1/payment_intents'),
+        headers: {
+          'Authorization': 'Bearer $securityKey',
+          'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: body,
+      );
+      var paymentIntent = json.decode(response.body) as Map<String, dynamic>;
+      return paymentIntent;
+    } catch (err) {
+      throw Exception(err.toString());
+    }
+  }
+
+  Future<Map<String, dynamic>> createCustomer(String email, String name) async {
+    try {
+      Map<String, dynamic> body = {
+        'email': email,
+        'name': name,
+      };
+
+      var response = await http.post(
+        Uri.parse('https://api.stripe.com/v1/customers'),
+        headers: {
+          'Authorization': 'Bearer $securityKey',
+          'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: body,
+      );
+
+      return json.decode(response.body.toString());
+    } catch (err) {
+      throw Exception(err.toString());
+    }
+  }
 }

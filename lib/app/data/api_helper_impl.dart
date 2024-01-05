@@ -66,6 +66,8 @@ class ApiHelperImpl extends GetConnect with ApiHelper {
 
   @override
   Future<Response> getRestaurantsByCat(url) => get(url);
+  @override
+  Future<Response> getRestaurantsByCatNew(url) => get(url);
 
   @override
   Future<Response> saveAddress(url, body) => post(url, body);

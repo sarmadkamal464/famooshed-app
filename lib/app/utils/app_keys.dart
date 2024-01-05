@@ -1,8 +1,8 @@
 abstract class ApiKeys {
   static const dev_stripe_pub =
-      "pk_test_51IJi9OKuIF9Xn1SPpxaex4cmWtVeQNf4Ui3jponde3329EmiQLVwKO1Ag3tdpO6nlDxBjzFdhvlDLAvfaJxlngGC00CXr3HRUG";
+      "pk_test_51OUb2vHJpwM2a5YZjowU7xVlup2SPZhvQV3e91g2jlTDqGq4mgLIGpEiFPUKHPVMRcgXHKRot3m7t3qpAqUqz8HW005DZ3hOzH";
   static const dev_sec_key =
-      "sk_test_51IJi9OKuIF9Xn1SP7aTTJsJE5ZbFna6XgNfgw0gOPg4ZGjYybifieT0sQ6GkytPrXi7c87heYdB33An0ICqZyZc900xhpwrICU";
+      "sk_test_51OUb2vHJpwM2a5YZzqRND2sWXkaZ7Bx5lluBlaXQFNWBWh8g6IPZoT4FtnCsNlKzWD8A7d4DGJkvGlenqdJrnxk500cdQOaoJC";
   static const live_stripe_pub = "";
   static const live_sec_key = "";
   static const map_key_android = "";

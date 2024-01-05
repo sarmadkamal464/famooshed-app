@@ -349,7 +349,8 @@ class OrdersPage extends GetView<OrdersController> {
 
   Widget orderItem(Color color, Order order) {
     return Padding(
-      padding: const EdgeInsets.all(8.0),
+      // padding: const EdgeInsets.all(8.0),
+      padding: EdgeInsets.fromLTRB(3, 8, 3, 8),
       child: Container(
         decoration: ShapeDecoration(
           color: Colors.white,
@@ -365,6 +366,7 @@ class OrdersPage extends GetView<OrdersController> {
         ),
         child: Padding(
           padding: const EdgeInsets.all(8.0),
+          // padding: EdgeInsets.fromLTRB(1.5, 8, 2, 8),
           child: Column(children: [
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,

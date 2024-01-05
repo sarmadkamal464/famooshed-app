@@ -5,7 +5,9 @@ import 'package:famooshed/app/common/constants.dart';
 import 'package:famooshed/app/common/util/exports.dart';
 import 'package:famooshed/app/common/values/app_icons.dart';
 import 'package:famooshed/app/data/models/get_food_details_response.dart';
+import 'package:famooshed/app/data/models/variant_model.dart';
 import 'package:famooshed/app/modules/signle_item_module/signle_item_controller.dart';
+import 'package:famooshed/app/modules/signle_item_module/single_product_variant_detail_page.dart';
 import 'package:famooshed/app/modules/widgets/custom_back_button.dart';
 import 'package:famooshed/app/modules/widgets/custom_default_button.dart';
 import 'package:famooshed/app/modules/widgets/no_item_found.dart';
@@ -28,168 +30,88 @@ import '../merchants_module/merchants_controller.dart';
 import '../widgets/custom_rect_button.dart';
 import 'package:flutter_html/flutter_html.dart';
 
-class SignleItemPage extends GetView<SignleItemController> {
-  const SignleItemPage({super.key});
+class VariantDetailPage extends GetView<SignleItemController> {
+  const VariantDetailPage({super.key});
 
   @override
   Widget build(BuildContext context) {
     return GetBuilder<SignleItemController>(
         builder: (SignleItemController signleItemController) {
-      return signleItemController.isLoading.value
-          ? const Scaffold(
-              body: Center(
-                  child: CircularProgressIndicator(color: Colors.transparent)),
-            )
-          : SafeArea(
-              top: false,
-              child: Scaffold(
-                resizeToAvoidBottomInset: false,
-                bottomNavigationBar: Container(
-                  decoration: const BoxDecoration(color: AppColors.white),
-                  child: Padding(
-                    padding: const EdgeInsets.only(
-                        left: 20.0, right: 20.0, top: 10.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        // Container(
-                        //   height: 48,
-                        //   width: 90,
-                        //   decoration: BoxDecoration(
-                        //       color: AppColors.blueColorLight,
-                        //       borderRadius: BorderRadius.circular(5.0)),
-                        //   child: Row(
-                        //     mainAxisAlignment: MainAxisAlignment.center,
-                        //     children: [
-                        //       GestureDetector(
-                        //           onTap: () {
-                        //             signleItemController.decrement();
-                        //           },
-                        //           child: const Icon(Icons.remove)),
-                        //       const SizedBox(width: 10.0),
-                        //       Text('${controller.counter.value}'),
-                        //       const SizedBox(width: 10.0),
-                        //       GestureDetector(
-                        //           onTap: () {
-                        //             signleItemController.increment();
-                        //           },
-                        //           child: const Icon(Icons.add)),
-                        //     ],
-                        //   ),
-                        // ),
-                        // const Spacer(),
-                        addCartButton()
-                      ],
+      return WillPopScope(
+        onWillPop: () async {
+          // Reset variant state here
+          signleItemController.resetState();
+          return true; // Allow back button press
+        },
+        child: signleItemController.isLoading.value
+            ? const Scaffold(
+                body: Center(child: CircularProgressIndicator(color: Colors.transparent)),
+              )
+            : SafeArea(
+                top: false,
+                child: Scaffold(
+                  resizeToAvoidBottomInset: false,
+                  bottomNavigationBar: Container(
+                    decoration: const BoxDecoration(color: AppColors.white),
+                    child: Padding(
+                      padding: const EdgeInsets.only(
+                          left: 20.0, right: 20.0, top: 10.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [addCartButton()],
+                      ),
                     ),
                   ),
-                ),
-                body: DefaultTabController(
-                  length: 2,
-                  child: NestedScrollView(
-                      headerSliverBuilder:
-                          (BuildContext context, bool innerBoxIsScrolled) {
-                        return <Widget>[
-                          SliverAppBar(
-                            title: Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              // child: Text(
-                              //     signleItemController
-                              //         .getFoodDetailsResponse!.foods[0].name,
-                              //     maxLines: 3,
-                              //     overflow: TextOverflow.clip,
-                              //     style: beVietnamProaBold.copyWith(
-                              //         fontSize: 24, color: AppColors.black)),
-                            ),
-                            expandedHeight: 300.0,
-                            floating: false,
-                            pinned: true,
-                            leading: const CustomBackButton(
-                              leading: Icon(
-                                Icons.arrow_back,
-                                color: AppColors.black,
+                  body: DefaultTabController(
+                    length: 2,
+                    child: NestedScrollView(
+                        headerSliverBuilder:
+                            (BuildContext context, bool innerBoxIsScrolled) {
+                          return <Widget>[
+                            SliverAppBar(
+                              title: Padding(
+                                padding: const EdgeInsets.all(8.0),
                               ),
-                            ),
-                            elevation: 0.0,
-                            backgroundColor: AppColors.white,
-                            systemOverlayStyle: const SystemUiOverlayStyle(
-                              statusBarColor: AppColors.white,
-                              statusBarIconBrightness: Brightness.dark,
-                              statusBarBrightness: Brightness.light,
-                            ),
-                            flexibleSpace: FlexibleSpaceBar(
+                              expandedHeight: 300.0,
+                              floating: false,
+                              pinned: true,
+                              leading: IconButton(
+                                icon: Icon(
+                                  Icons.arrow_back,
+                                  color: AppColors.black,
+                                ),
+                                onPressed: () {
+                                  // Reset state and navigate back
+                                  signleItemController.resetState();
+                                  Get.back();
+                                },
+                              ),
+                              elevation: 0.0,
+                              backgroundColor: AppColors.white,
+                              systemOverlayStyle: const SystemUiOverlayStyle(
+                                statusBarColor: AppColors.white,
+                                statusBarIconBrightness: Brightness.dark,
+                                statusBarBrightness: Brightness.light,
+                              ),
+                              flexibleSpace: FlexibleSpaceBar(
                                 centerTitle: true,
                                 background: Image.network(
                                   Constants.imgUrl +
-                                      signleItemController
-                                          .getFoodDetailsResponse!.image,
+                                      (signleItemController
+                                              .getVariantsDetailsResponse!
+                                              .variantImage ??
+                                          ''),
                                   fit: BoxFit.fitHeight,
-                                )),
-                          ),
-                          // SliverPersistentHeader(
-                          //   delegate:
-                          // _SliverAppBarDelegate(
-
-                          // TabBar(
-                          //   indicatorColor: AppColors.appTheme,
-                          //   // indicator: const BoxDecoration(color: Colors.blue),
-                          //   // indicator: const UnderlineTabIndicator(
-                          //   //   borderSide: BorderSide(color: Color(0xDD613896), width: 8.0),
-                          //   //   insets: EdgeInsets.fromLTRB(50.0, 0.0, 50.0, 40.0),
-                          //   // ),
-                          //
-                          //   labelColor: AppColors.appTheme,
-                          //
-                          //   unselectedLabelColor: AppColors.appTheme,
-                          //   labelStyle: beVietnamProSemiBold.copyWith(
-                          //       fontSize: getProportionalFontSize(16),
-                          //       color: AppColors.appTheme),
-                          //   tabs: [
-                          //     Tab(
-                          //       text: "general description".capitalize,
-                          //     ),
-                          //     Tab(text: "nutritional information".capitalize),
-                          //   ],
-                          // ),
-                          // ),
-                          //   pinned: true,
-                          // ),
-                        ];
-                      },
-                      body: generalDescription(signleItemController)
-                      // TabBarView(
-                      //   // controller: _tabController,
-                      //
-                      //   children: [
-                      //     generalDescription(signleItemController),
-                      //     Container(
-                      //       child: signleItemController.getFoodDetailsResponse!
-                      //                   .foods[0].ingredients ==
-                      //               ""
-                      //           ? const NoItemFound()
-                      //           : Column(
-                      //               children: [
-                      //                 Row(
-                      //                   children: [
-                      //                     SvgPicture.asset(AppIcons.arrow),
-                      //                     const Text("1 item = 1.4 Kg")
-                      //                   ],
-                      //                 ),
-                      //                 Row(
-                      //                   children: [
-                      //                     SvgPicture.asset(AppIcons.arrow),
-                      //                     const Text("Fresh & Green")
-                      //                   ],
-                      //                 ),
-                      //                 const Divider(thickness: 1),
-                      //               ],
-                      //             ),
-                      //     ),
-                      //   ],
-                      // ),
-                      ),
+                                ),
+                              ),
+                            ),
+                          ];
+                        },
+                        body: generalDescription(signleItemController)),
+                  ),
                 ),
               ),
-            );
+      );
     });
   }
 
@@ -258,76 +180,8 @@ class SignleItemPage extends GetView<SignleItemController> {
     );
   }
 
-  Widget variantDropdown(SignleItemController singleItemController) {
-    final variants =
-        (singleItemController.getFoodDetailsResponse?.variants ?? [])
-            .map((variant) =>
-                Variant(variant['id'].toString(), variant['name'].toString()))
-            .toList();
-
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Obx(() {
-          bool variantSelected = singleItemController.isVariantSelected.value;
-          Variant selectedVariant = singleItemController.selectedVariant.value;
-          if (variants.isEmpty) {
-            return SizedBox
-                .shrink(); // Returns an empty SizedBox if variants list is empty
-          }
-          String hint = variants.isNotEmpty
-              ? 'Please Select Variant'
-              : 'No Product Variants';
-          return Container(
-            height: 45,
-            decoration: BoxDecoration(
-              border: Border.all(
-                color: Color.fromARGB(
-                    255, 31, 61, 32), // Customize border color if needed
-                width: 2.0, // Customize border width if needed
-              ),
-              borderRadius:
-                  BorderRadius.circular(8.0), // Customize border radius
-            ),
-            child: DropdownButton<Variant>(
-              value: variantSelected ? selectedVariant : null,
-              hint: Padding(
-                padding: const EdgeInsets.all(10.0),
-                child: Text(
-                  hint,
-                  style: TextStyle(color: Color.fromARGB(255, 31, 61, 32)),
-                ),
-              ),
-              isExpanded: true,
-              isDense: true,
-              iconSize: 40,
-              elevation: 8,
-              style: const TextStyle(
-                fontFamily: 'SF Pro Display',
-                color: Color.fromARGB(255, 31, 61, 32),
-                fontWeight: FontWeight.bold,
-              ),
-              onChanged: (newValue) {
-                singleItemController.updateSelectedVariant(newValue!);
-              },
-              items: variants.map((variant) {
-                return DropdownMenuItem<Variant>(
-                  value: variant,
-                  child: Padding(
-                    padding: const EdgeInsets.all(10.0),
-                    child: Text(variant.name),
-                  ),
-                );
-              }).toList(),
-            ),
-          );
-        }),
-        // ... Other UI elements ...
-      ],
-    );
-  }
-
   Widget generalDescription(SignleItemController signleItemController) {
+    final variantResponse = signleItemController.getVariantsDetailsResponse;
     return SingleChildScrollView(
       padding: EdgeInsets.symmetric(
           horizontal: getProportionateScreenWidth(16),
@@ -336,7 +190,7 @@ class SignleItemPage extends GetView<SignleItemController> {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(controller.getFoodDetailsResponse!.foods[0].name,
+            Text(variantResponse!.variant!.name ?? '',
                 maxLines: 3,
                 overflow: TextOverflow.clip,
                 style: beVietnamProaBold.copyWith(
@@ -363,7 +217,15 @@ class SignleItemPage extends GetView<SignleItemController> {
               height: getProportionateScreenHeight(8),
             ),
             Text(
-              "Weight: ${controller.getFoodDetailsResponse!.foods[0].weight} ${controller.getFoodDetailsResponse!.foods[0].unit}",
+              "Weight: ${variantResponse.variant!.weight} ${variantResponse.variant!.unit}",
+              style: urbanistRegular.copyWith(
+                color: Colors.black,
+                fontSize: getProportionalFontSize(13),
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+            Text(
+              "Price: ${variantResponse.currency} ",
               style: urbanistRegular.copyWith(
                 color: Colors.black,
                 fontSize: getProportionalFontSize(13),
@@ -379,10 +241,6 @@ class SignleItemPage extends GetView<SignleItemController> {
                 fontWeight: FontWeight.w600,
               ),
             ),
-            SizedBox(
-              height: 5,
-            ),
-            variantDropdown(controller),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -398,12 +256,13 @@ class SignleItemPage extends GetView<SignleItemController> {
                       Row(
                         children: [
                           CircleAvatar(
-                              radius: 15,
-                              backgroundImage: NetworkImage(Constants.imgUrl +
-                                  signleItemController
-                                      .getFoodDetailsResponse!.image)
-                              // NetworkImage(Constants.imgUrl + item.image),
-                              ),
+                            radius: 15,
+                            backgroundImage: NetworkImage(
+                              Constants.imgUrl +
+                                  (variantResponse.variantImage ?? ''),
+                            ),
+                            // NetworkImage(Constants.imgUrl + item.image),
+                          ),
                           const SizedBox(width: 12),
                           Text(
                               signleItemController
@@ -434,45 +293,6 @@ class SignleItemPage extends GetView<SignleItemController> {
                                   Text(
                                       '(${signleItemController.foodsReview.isNotEmpty ? signleItemController.foodsReview.length : 0})'),
                                 ]),
-                            // child: Row(
-                            //   mainAxisAlignment: MainAxisAlignment.center,
-                            //   children: [
-                            //     Container(
-                            //       decoration: BoxDecoration(
-                            //           color: AppColors.white,
-                            //           border: Border.all(
-                            //             color: AppColors.white,
-                            //           ),
-                            //           borderRadius: const BorderRadius.all(
-                            //               Radius.circular(20))),
-                            //       child: Padding(
-                            //         padding: const EdgeInsets.all(8.0),
-                            //         child: Row(children: [
-                            //           Text(
-                            //             "${signleItemController.getFoodDetailsResponse!.stars}",
-                            //             style: urbanistBold.copyWith(
-                            //                 fontSize: 14,
-                            //                 color: AppColors.appTheme),
-                            //           ),
-                            //           const SizedBox(
-                            //             width: 5,
-                            //           ),
-                            //           Image.asset(AppImages.star),
-                            //           signleItemController
-                            //                   .foodsReview.isNotEmpty
-                            //               ? Text(
-                            //                   "(${signleItemController.foodsReview.isNotEmpty ? signleItemController.foodsReview.length : 0})",
-                            //                   style: urbanistBold.copyWith(
-                            //                       fontSize: 14,
-                            //                       color: AppColors.appTheme
-                            //                           .withOpacity(.5)),
-                            //                 )
-                            //               : const SizedBox(),
-                            //         ]),
-                            //       ),
-                            //     ),
-                            //   ],
-                            // ),
                           ),
                         ],
                       ),
@@ -503,14 +323,6 @@ class SignleItemPage extends GetView<SignleItemController> {
                     ),
                   ],
                 ),
-                // ExpansionTile(
-                //   backgroundColor: Colors.white,
-                //   // childrenPadding: EdgeInsets.zero,
-                //   title: const Text('Recent Review'),
-                //   children: <Widget>[
-                //     reviewPage(signleItemController),
-                //   ],
-                // ),
                 reviewPage(signleItemController),
                 const Divider(thickness: 1),
                 SizedBox(height: Get.height * .01),
@@ -594,7 +406,6 @@ class SignleItemPage extends GetView<SignleItemController> {
                     : Text("Recommended products",
                         style: beVietnamProaBold.copyWith(
                             fontSize: 20, color: AppColors.appTheme)),
-
                 signleItemController.similarPrductList.isEmpty
                     ? Text("No Recommended products found",
                         style: beVietnamProaBold.copyWith(
@@ -750,13 +561,6 @@ class SignleItemPage extends GetView<SignleItemController> {
                       borderRadius: BorderRadius.circular(8)),
                 ),
               ),
-              // ClipRRect(
-              //     borderRadius: BorderRadius.circular(12.0),
-              //     child: SizedBox(
-              //       child: CachedNetworkImage(
-              //           imageUrl:
-              //               Constants.imgUrl + controller.foodList[index].image),
-              //     )),
               Text(
                 data.name,
                 maxLines: 1,
@@ -796,71 +600,6 @@ class SignleItemPage extends GetView<SignleItemController> {
                           fontSize: getProportionalFontSize(18),
                           color: AppColors.appThemeText),
                     ),
-                    // DefaultRectButton(
-                    //     buttonColor: AppColors.appTheme,
-                    //     textColor: AppColors.white,
-                    //     height: 35,
-                    //     text: "Add to Cart",
-                    //     width: Get.width * .25,
-                    //     onTap: () {
-                    //       // controller.addToCart(index);
-                    //       Get.bottomSheet(GetBuilder(
-                    //         builder: (MerchantsController controller) {
-                    //           return Container(
-                    //             decoration:
-                    //                 const BoxDecoration(color: AppColors.white),
-                    //             child: Padding(
-                    //               padding: const EdgeInsets.only(
-                    //                   left: 20.0, right: 20.0, top: 10.0),
-                    //               child: Row(
-                    //                 children: [
-                    //                   Container(
-                    //                     height: 48,
-                    //                     width: 90,
-                    //                     decoration: BoxDecoration(
-                    //                         color: AppColors.blueColorLight,
-                    //                         borderRadius:
-                    //                             BorderRadius.circular(5.0)),
-                    //                     child: Row(
-                    //                       mainAxisAlignment:
-                    //                           MainAxisAlignment.center,
-                    //                       children: [
-                    //                         GestureDetector(
-                    //                             onTap: () {
-                    //                               controller.decrement();
-                    //                             },
-                    //                             child:
-                    //                                 const Icon(Icons.remove)),
-                    //                         const SizedBox(width: 10.0),
-                    //                         Text('${controller.counter.value}'),
-                    //                         const SizedBox(width: 10.0),
-                    //                         GestureDetector(
-                    //                             onTap: () {
-                    //                               controller.increment();
-                    //                             },
-                    //                             child: const Icon(Icons.add)),
-                    //                       ],
-                    //                     ),
-                    //                   ),
-                    //                   const Spacer(),
-                    //                   DefaultRectButton(
-                    //                       buttonColor: AppColors.appTheme,
-                    //                       textColor: AppColors.white,
-                    //                       height: 40,
-                    //                       text: "Add to Cart",
-                    //                       width: Get.width * .3,
-                    //                       onTap: () {
-                    //                         // controller.addToCart(index);
-                    //                         controller.addToCartNew(
-                    //                             controller.foodList[index]);
-                    //                       })
-                    //                 ],
-                    //               ),
-                    //             ),
-                    //           );
-                    //         },
-                    //       ));
-                    //     })
                   ],
                 ),
               ),
@@ -889,13 +628,6 @@ class SignleItemPage extends GetView<SignleItemController> {
                     borderRadius: BorderRadius.circular(8.0),
                     child: Image.network(Constants.imgUrl + data.image)),
               ),
-              // ClipRRect(
-              //   borderRadius: BorderRadius.circular(8.0),
-              //   child: CachedNetworkImage(
-              //       height: 220,
-              //       fit: BoxFit.cover,
-              //       imageUrl:  AssetImage(AppImages.dummyFood)),
-              // ),
               const SizedBox(height: 10),
               GestureDetector(
                 onTap: () {
@@ -916,8 +648,6 @@ class SignleItemPage extends GetView<SignleItemController> {
                           style: beVietnamProaBold.copyWith(
                               color: AppColors.appTheme, fontSize: 16)),
                     ),
-                    // const CircleAvatar(
-                    //     backgroundImage: AssetImage(AppImages.dummyFood)),
                     CircleAvatar(
                       radius: 15,
                       backgroundImage:
@@ -1055,7 +785,7 @@ class SignleItemPage extends GetView<SignleItemController> {
     return GestureDetector(
       onTap: () {
         // controller.addToCart();
-        controller.addToCartNew();
+        controller.addToCartVariantNew();
       },
       child: Container(
         width: Get.width * .6,

@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:famooshed/app/theme/loader.dart';
 import 'package:flutter/material.dart';
 
 // 30.12.2020
@@ -160,9 +161,9 @@ class _IBannerState extends State<IBanner> {
                     placeholder: (context, url) => UnconstrainedBox(
                         child: Container(
                       alignment: Alignment.center,
-                      width: 40,
-                      height: 40,
-                      child: const CircularProgressIndicator(),
+                      width: 60,
+                      height: 60,
+                      child: const Loader(),
                     )),
                     imageUrl: item,
                     imageBuilder: (context, imageProvider) => Container(

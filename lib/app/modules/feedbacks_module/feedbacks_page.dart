@@ -1,5 +1,6 @@
 import 'package:famooshed/app/modules/widgets/custom_appbar_widget.dart';
 import 'package:famooshed/app/modules/widgets/custom_default_button.dart';
+import 'package:famooshed/app/theme/loader.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:famooshed/app/modules/feedbacks_module/feedbacks_controller.dart';
@@ -62,7 +63,7 @@ class FeedbacksPage extends GetView<FeedbacksController> {
             Obx(() => Visibility(
                 visible: controller.isLoading.value,
                 child: const Center(
-                  child: CircularProgressIndicator(),
+                  child: Loader(),
                 )))
           ],
         ),

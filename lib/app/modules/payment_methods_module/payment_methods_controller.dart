@@ -142,7 +142,7 @@ class PaymentMethodsController extends GetxController {
 
     try {
       con.Response response = await dio.post(url, data: jsonEncode(body));
-      dprint(response.data);
+      dprint('Response Data ${response.data}');
 
       if (response.data["status"] == "succeeded") {
         // addToCart();

@@ -114,7 +114,7 @@ class _MapTrackingScreenState extends State<MapTrackingScreen> {
 
     try {
       Uri driverLocUri =
-          Uri.parse("https://www.famooshed.com/get-driver-location");
+          Uri.parse("https://www.famooshed.co.uk/get-driver-location");
 
       String token = await Storage.getValue(Constants.token);
 

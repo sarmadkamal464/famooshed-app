@@ -15,11 +15,14 @@ abstract class AppUrl {
   static const getBasket = "getBasket";
   static const notify = "notify";
   static const getRestaurantByCat = "getRestaurantByCat?restaurant=";
+  static const getRestaurantByCatNew =
+      "${Constants.baseUrlNew}getFoodByCatLocation?cat_id=";
   static const saveAddress = "saveAddress";
   static const getAddress = "getAddress";
   static const getResDeliver = "getResDeliver";
   static const delAddress = "delAddress";
   static const getFoodDetails = "getFood?id=";
+  static const getFoodVariantDetails = "GetVariants?id=";
   static const addFoodReviews = "foodReviewsAdd";
   static const getProfile = "getUserProfile";
   static const uploadAvatar = "uploadAvatar";

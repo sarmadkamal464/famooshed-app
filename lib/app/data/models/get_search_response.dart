@@ -57,7 +57,7 @@ class Food {
   String ingredients;
   String unit;
   int packageCount;
-  int weight;
+  String weight;
   int canDelivery;
   int stars;
   int published;
@@ -70,7 +70,7 @@ class Food {
   String restaurantMobilePhone;
   String fee;
   int percent;
-  int merchantCommission;
+  dynamic merchantCommission;
   List<Merchantstripe> merchantstripe;
   List<dynamic> nutritionsdata;
   List<dynamic> extrasdata;

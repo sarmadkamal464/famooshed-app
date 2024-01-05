@@ -1,10 +1,12 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:famooshed/app/common/constants.dart';
 import 'package:famooshed/app/common/values/app_icons.dart';
+import 'package:famooshed/app/data/models/get_restaurants_by_cat_response_new.dart';
 import 'package:famooshed/app/modules/find_by_category_module/find_by_category_controller.dart';
 import 'package:famooshed/app/modules/widgets/custom_appbar_widget.dart';
 import 'package:famooshed/app/routes/app_pages.dart';
 import 'package:famooshed/app/theme/app_text_theme.dart';
+import 'package:famooshed/app/theme/loader.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
@@ -33,162 +35,170 @@ class FindByCategoryPage extends GetView<FindByCategoryController> {
             title: "Find By Category"),
         body: GetBuilder(
           builder: (FindByCategoryController findByCategoryController) {
-            return Column(
-              children: [
-                findByCategoryController.category.isNotEmpty
-                    ? Padding(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 10, vertical: 10),
-                        child: Row(
-                          children: [
-                            ClipRRect(
-                              borderRadius: BorderRadius.circular(30),
-                              child: CircleAvatar(
-                                  backgroundColor: AppColors.white,
-                                  child: Image.network(Constants.imgUrl +
-                                      findByCategoryController
-                                          .category[0].image)
-
-                                  // SvgPicture.asset(AppIcons.heart),
-
-                                  ),
-                            ),
-                            const SizedBox(width: 10),
-                            Text(
-                              findByCategoryController.category[0].name,
-                              style: beVietnamProSemiBold.copyWith(
-                                color: const Color(0xFF204F33),
-                                fontSize: 20,
-                                fontFamily: 'Be Vietnam Pro',
-                                fontWeight: FontWeight.w600,
-                              ),
-                            ),
-                            const Spacer(),
-                            InkWell(
-                              onTap: () {
-                                Get.bottomSheet(
-                                  ListView.builder(
-                                    itemCount:
-                                        findByCategoryController.allCat.length,
-                                    itemBuilder:
-                                        (BuildContext context, int index) {
-                                      var data = findByCategoryController
-                                          .allCat[index];
-                                      return InkWell(
-                                        onTap: () {
-                                          findByCategoryController.catId =
-                                              data.id;
-                                          findByCategoryController.update();
-                                          Get.back();
-                                          findByCategoryController
-                                              .getCategoryData();
-                                        },
-                                        child: Padding(
-                                          padding: EdgeInsets.symmetric(
-                                              horizontal:
-                                                  getProportionateScreenWidth(
-                                                      16),
-                                              vertical:
-                                                  getProportionateScreenHeight(
-                                                      8)),
-                                          child: ListTile(
-                                            contentPadding: EdgeInsets.zero,
-                                            horizontalTitleGap:
-                                                getProportionateScreenWidth(25),
-                                            leading: CachedNetworkImage(
-                                              imageUrl:
-                                                  Constants.imgUrl + data.image,
-                                              width:
-                                                  getProportionateScreenWidth(
-                                                      48),
-                                              height:
-                                                  getProportionateScreenHeight(
-                                                      48),
-                                              fit: BoxFit.fitWidth,
-                                              imageBuilder:
-                                                  (context, imageProvider) {
-                                                return Container(
-                                                  decoration: BoxDecoration(
-                                                      shape: BoxShape.circle,
-                                                      image: DecorationImage(
-                                                          fit: BoxFit.cover,
-                                                          image:
-                                                              imageProvider)),
-                                                );
-                                              },
-                                              errorWidget:
-                                                  (context, url, error) {
-                                                return Container(
-                                                    decoration: BoxDecoration(
-                                                      shape: BoxShape.circle,
-                                                      color: Colors.black12,
-                                                    ),
-                                                    child: Icon(Icons.error));
-                                              },
-                                            ),
-                                            // leading: CircleAvatar(
-                                            //   radius: 25,
-                                            //   backgroundImage: NetworkImage(
-                                            //       Constants.imgUrl +
-                                            //           data.image),
-                                            // ),
-                                            title: Text(data.name),
-                                          ),
-                                        ),
-                                      );
-                                    },
-                                  ),
-                                  backgroundColor: Colors.white,
-                                  elevation: 0,
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(10),
-                                  ),
-                                );
-                              },
-                              child: Text(
-                                "Change category",
-                                style: beVietnamProSemiBold.copyWith(
-                                    color: AppColors.appThemeText,
-                                    fontSize: 18),
-                              ),
-                            )
-                          ],
-                        ),
-                      )
-                    : const SizedBox(),
-                Divider(
-                  thickness: 1,
-                  indent: 10,
-                  endIndent: 10,
-                  color: AppColors.doveGray.withOpacity(.5),
-                ),
-                findByCategoryController.restaurByCat.isEmpty
-                    ? Expanded(
-                        child: Center(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            mainAxisAlignment: MainAxisAlignment.center,
+            return Obx(
+              () => Column(
+                children: [
+                  findByCategoryController.categoryList.isNotEmpty
+                      ? Padding(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 10, vertical: 10),
+                          child: Row(
                             children: [
-                              SizedBox(
-                                child: SvgPicture.asset(AppIcons.noItemFoound),
+                              ClipRRect(
+                                borderRadius: BorderRadius.circular(30),
+                                child: CircleAvatar(
+                                    backgroundColor: AppColors.white,
+                                    child: Image.network(
+                                        findByCategoryController
+                                            .categoryList[0].filename)
+
+                                    // SvgPicture.asset(AppIcons.heart),
+
+                                    ),
                               ),
+                              const SizedBox(width: 10),
                               Text(
-                                "Nothing Found!",
+                                findByCategoryController.categoryList[0].name,
                                 style: beVietnamProSemiBold.copyWith(
-                                  color: AppColors.appTheme,
-                                  fontSize: 26,
+                                  color: const Color(0xFF204F33),
+                                  fontSize: 20,
+                                  fontFamily: 'Be Vietnam Pro',
+                                  fontWeight: FontWeight.w600,
                                 ),
                               ),
+                              const Spacer(),
+                              InkWell(
+                                onTap: () {
+                                  Get.bottomSheet(
+                                    ListView.builder(
+                                      itemCount: findByCategoryController
+                                          .allCategories.length,
+                                      itemBuilder:
+                                          (BuildContext context, int index) {
+                                        var data = findByCategoryController
+                                            .allCategories[index];
+                                        return InkWell(
+                                          onTap: () {
+                                            findByCategoryController.catId =
+                                                data.id;
+                                            findByCategoryController.update();
+                                            Get.back();
+                                            findByCategoryController
+                                                .getCategoryDataNew();
+                                          },
+                                          child: Padding(
+                                            padding: EdgeInsets.symmetric(
+                                                horizontal:
+                                                    getProportionateScreenWidth(
+                                                        16),
+                                                vertical:
+                                                    getProportionateScreenHeight(
+                                                        8)),
+                                            child: ListTile(
+                                              contentPadding: EdgeInsets.zero,
+                                              horizontalTitleGap:
+                                                  getProportionateScreenWidth(
+                                                      25),
+                                              leading: CachedNetworkImage(
+                                                imageUrl: data.filename,
+                                                width:
+                                                    getProportionateScreenWidth(
+                                                        48),
+                                                height:
+                                                    getProportionateScreenHeight(
+                                                        48),
+                                                fit: BoxFit.fitWidth,
+                                                imageBuilder:
+                                                    (context, imageProvider) {
+                                                  return Container(
+                                                    decoration: BoxDecoration(
+                                                        shape: BoxShape.circle,
+                                                        image: DecorationImage(
+                                                            fit: BoxFit.cover,
+                                                            image:
+                                                                imageProvider)),
+                                                  );
+                                                },
+                                                errorWidget:
+                                                    (context, url, error) {
+                                                  return Container(
+                                                      decoration: BoxDecoration(
+                                                        shape: BoxShape.circle,
+                                                        color: Colors.black12,
+                                                      ),
+                                                      child: Icon(Icons.error));
+                                                },
+                                              ),
+                                              title: Text(data.name),
+                                            ),
+                                          ),
+                                        );
+                                      },
+                                    ),
+                                    backgroundColor: Colors.white,
+                                    elevation: 0,
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(10),
+                                    ),
+                                  );
+                                },
+                                child: Text(
+                                  "Change category",
+                                  style: beVietnamProSemiBold.copyWith(
+                                      color: AppColors.appThemeText,
+                                      fontSize: 18),
+                                ),
+                              )
                             ],
                           ),
-                        ),
-                      )
-                    : Expanded(
-                        child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: popularMerchants(findByCategoryController),
-                      )),
-              ],
+                        )
+                      : const SizedBox(),
+                  Divider(
+                    thickness: 1,
+                    indent: 10,
+                    endIndent: 10,
+                    color: AppColors.doveGray.withOpacity(.5),
+                  ),
+                  Expanded(
+                    child: Obx(() {
+                      // Check if the data is currently loading
+                      if (findByCategoryController.isLoading == true) {
+                        // Show loading indicator
+                        return const Center(
+                          child: Loader(),
+                        );
+                      } else {
+                        // Check if the category data is empty
+                        return findByCategoryController.categoryData.isEmpty
+                            ? Center(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    SizedBox(
+                                      child: SvgPicture.asset(
+                                          AppIcons.noItemFoound),
+                                    ),
+                                    Text(
+                                      "Nothing Found!",
+                                      style: beVietnamProSemiBold.copyWith(
+                                        color: AppColors.appTheme,
+                                        fontSize: 26,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              )
+                            : Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child:
+                                    popularMerchants(findByCategoryController),
+                              );
+                      }
+                    }),
+                  )
+                ],
+              ),
             );
           },
         ));
@@ -207,15 +217,15 @@ class FindByCategoryPage extends GetView<FindByCategoryController> {
               crossAxisSpacing: 8,
               mainAxisSpacing: 20,
               crossAxisCount: 2),
-          itemCount: findByCategoryController.restaurByCat.length,
+          itemCount: findByCategoryController.categoryData.length,
           itemBuilder: (BuildContext ctx, index) {
-            RestaurantByCat data = findByCategoryController.restaurByCat[index];
+            Resturneartous data = findByCategoryController.categoryData[index];
             return listItemCard(index, data);
           }),
     );
   }
 
-  listItemCard(index, RestaurantByCat item) {
+  listItemCard(index, Resturneartous item) {
     return GestureDetector(
       onTap: () {
         Get.toNamed(Routes.MERCHANTS, arguments: item);
@@ -243,98 +253,42 @@ class FindByCategoryPage extends GetView<FindByCategoryController> {
                   child: CachedNetworkImage(
                       height: getProportionateScreenHeight(150),
                       fit: BoxFit.fill,
-                      imageUrl: controller.restaurByCat[index].image!),
+                      imageUrl: Constants.imgUrl +
+                          controller.categoryData[index].filename),
                 ),
-                // ClipRRect(
-                //   borderRadius: BorderRadius.circular(8.0),
-                //   child: CachedNetworkImage(
-                //       height: 220,
-                //       fit: BoxFit.cover,
-                //       imageUrl:  AssetImage(AppImages.dummyFood)),
-                // ),
                 SizedBox(height: getProportionateScreenHeight(10)),
                 GestureDetector(
                   onTap: () {
                     printInfo(info: "Hello");
-                    // Get.toNamed(Routes.MERCHANTS, arguments: item.id);
                   },
                   child: Padding(
                     padding: EdgeInsets.symmetric(
-                        horizontal: getProportionateScreenWidth(8)),
+                      horizontal: getProportionateScreenWidth(8),
+                    ),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text(
-                            controller.restaurByCat[index].name ??
+                        Expanded(
+                          child: Text(
+                            controller.categoryData[index].name ??
                                 '-'.capitalize.toString(),
                             style: beVietnamProaBold.copyWith(
-                                color: AppColors.appTheme, fontSize: 16)),
+                              color: AppColors.appTheme,
+                              fontSize: 16,
+                            ),
+                            overflow: TextOverflow.ellipsis,
+                            maxLines: 1,
+                          ),
+                        ),
                         CircleAvatar(
                           radius: 15,
-                          backgroundImage: NetworkImage(
-                              controller.restaurByCat[index].image!),
-                        )
+                          backgroundImage: NetworkImage(Constants.imgUrl +
+                              controller.categoryData[index].filename),
+                        ),
                       ],
                     ),
                   ),
                 ),
-                // Padding(
-                //   padding: EdgeInsets.symmetric(
-                //       horizontal: getProportionateScreenWidth(5),
-                //       vertical: 5.0),
-                //   child: Row(
-                //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                //     children: [
-                //       Expanded(
-                //         child: Row(
-                //           children: [
-                //             const Iconify(
-                //               Carbon.delivery_parcel,
-                //               color: Color(0xFF9D9D9D),
-                //               size: 16,
-                //             ),
-                //             const SizedBox(width: 3),
-                //             Expanded(
-                //               child: Text(
-                //                 "free delivery".capitalize!,
-                //                 maxLines: 1,
-                //                 overflow: TextOverflow.ellipsis,
-                //                 style: urbanistSemiBold.copyWith(
-                //                     color: const Color(0xFF9D9D9D),
-                //                     fontSize: getProportionalFontSize(11)),
-                //               ),
-                //             ),
-                //           ],
-                //         ),
-                //       ),
-                //       SizedBox(width: getProportionateScreenWidth(5)),
-                //       Expanded(
-                //         child: Row(
-                //           children: [
-                //             const Iconify(
-                //               Ic.round_access_time,
-                //               color: Color(0xFF9D9D9D),
-                //               size: 16,
-                //             ),
-                //             const SizedBox(
-                //               width: 3,
-                //             ),
-                //             Expanded(
-                //               child: Text(
-                //                 "10-15 mins",
-                //                 maxLines: 1,
-                //                 overflow: TextOverflow.ellipsis,
-                //                 style: urbanistSemiBold.copyWith(
-                //                     color: const Color(0xFF9D9D9D),
-                //                     fontSize: getProportionalFontSize(11)),
-                //               ),
-                //             ),
-                //           ],
-                //         ),
-                //       ),
-                //     ],
-                //   ),
-                // ),
                 SizedBox(height: getProportionateScreenHeight(10)),
                 Padding(
                   padding: EdgeInsets.symmetric(
@@ -354,7 +308,7 @@ class FindByCategoryPage extends GetView<FindByCategoryController> {
                             const SizedBox(width: 3),
                             Expanded(
                               child: Text(
-                                "${item.businessAddress}",
+                                "${item.address}",
                                 maxLines: 1,
                                 overflow: TextOverflow.ellipsis,
                                 style: urbanistSemiBold.copyWith(
@@ -375,7 +329,8 @@ class FindByCategoryPage extends GetView<FindByCategoryController> {
                                   ),
                                   Flexible(
                                     child: Text(
-                                      "${Utils.calcuDistance(item.lat ?? 0.toString(), item.lng ?? 0.toString()) + " Miles"}",
+                                      item.distance.round().toString() +
+                                          " Miles",
                                       maxLines: 1,
                                       overflow: TextOverflow.ellipsis,
                                       style: urbanistSemiBold.copyWith(
@@ -389,29 +344,6 @@ class FindByCategoryPage extends GetView<FindByCategoryController> {
                           ],
                         ),
                       ),
-                      // SizedBox(width: getProportionateScreenWidth(5)),
-                      // Expanded(
-                      //   child: Row(
-                      //     children: [
-                      //       const Iconify(
-                      //         Uil.shopping_basket,
-                      //         color: Color(0xFF9D9D9D),
-                      //         size: 16,
-                      //       ),
-                      //       const SizedBox(
-                      //         width: 3,
-                      //       ),
-                      //       Text(
-                      //         "{250 items}",
-                      //         maxLines: 1,
-                      //         overflow: TextOverflow.ellipsis,
-                      //         style: urbanistSemiBold.copyWith(
-                      //             color: const Color(0xFF9D9D9D),
-                      //             fontSize: getProportionalFontSize(11)),
-                      //       ),
-                      //     ],
-                      //   ),
-                      // ),
                     ],
                   ),
                 ),
@@ -433,7 +365,7 @@ class FindByCategoryPage extends GetView<FindByCategoryController> {
                         padding: const EdgeInsets.all(8.0),
                         child: Row(children: [
                           Text(
-                            "${item.rate ?? 0}",
+                            "5",
                             style: urbanistBold.copyWith(
                                 fontSize: 14, color: AppColors.appTheme),
                           ),
@@ -441,7 +373,7 @@ class FindByCategoryPage extends GetView<FindByCategoryController> {
                             width: 5,
                           ),
                           Image.asset(AppImages.star),
-                          Text('(${item.numberOfRating ?? 0})'),
+                          Text('(0)'),
                         ]),
                       ),
                     ),
@@ -452,7 +384,7 @@ class FindByCategoryPage extends GetView<FindByCategoryController> {
 
                               FavoriteController()
                                   .deleteFavProducts(item.id.toString(), false);
-                              controller.restaurByCat.forEach((element) {
+                              controller.categoryData.forEach((element) {
                                 if (element.id == item.id) {
                                   element.favStatus = 'false';
                                 }
@@ -476,7 +408,7 @@ class FindByCategoryPage extends GetView<FindByCategoryController> {
                               FavoriteController()
                                   .addFavProducts(item.id.toString());
 
-                              controller.restaurByCat.forEach((element) {
+                              controller.categoryData.forEach((element) {
                                 if (element.id == item.id) {
                                   element.favStatus = 'true';
                                 }
@@ -492,41 +424,6 @@ class FindByCategoryPage extends GetView<FindByCategoryController> {
                   ],
                 ),
               )
-              // GestureDetector(
-              //   onTap: () {},
-              //   child: Padding(
-              //     padding: const EdgeInsets.only(left: 8.0),
-              //     child: Row(
-              //       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              //       children: [
-              //         Container(
-              //           height: 25,
-              //           width: 74,
-              //           decoration: BoxDecoration(
-              //               color: AppColors.white,
-              //               border: Border.all(
-              //                 color: AppColors.white,
-              //               ),
-              //               borderRadius:
-              //                   const BorderRadius.all(Radius.circular(20))),
-              //           child: Row(
-              //               mainAxisAlignment: MainAxisAlignment.center,
-              //               children: [
-              //                 const Text('4.5'),
-              //                 Image.asset(AppImages.star),
-              //                 const Text('(25)'),
-              //               ]),
-              //         ),
-              //         IconButton(
-              //           icon: CircleAvatar(
-              //               backgroundColor: AppColors.white,
-              //               child: SvgPicture.asset(AppIcons.heart)),
-              //           onPressed: () {},
-              //         )
-              //       ],
-              //     ),
-              //   ),
-              // )
             ],
           ),
         ),

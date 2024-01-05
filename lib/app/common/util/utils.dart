@@ -6,6 +6,7 @@ import 'package:famooshed/app/common/values/app_logo.dart';
 import 'package:famooshed/app/modules/dashboard_module/dashboard_controller.dart';
 import 'package:famooshed/app/modules/widgets/custom_inkwell_widget.dart';
 import 'package:famooshed/app/modules/widgets/custom_text_button.dart';
+import 'package:famooshed/app/theme/loader.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_cropper/image_cropper.dart';
@@ -153,14 +154,11 @@ abstract class Utils {
       ),
     );
   }
-
   static void loadingDialog() {
     closeDialog();
 
     Get.dialog(
-      const Center(
-        child: CircularProgressIndicator(),
-      ),
+      Loader(),
       name: 'loadingDialog',
     );
   }
